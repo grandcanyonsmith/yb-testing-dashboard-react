@@ -118,30 +118,46 @@ const StatusFilter = ({ selectedStatuses, onFilterChange }) => {
 };
 
 const MobileFilterSection = ({ title, options, selectedOptions, onOptionChange }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDropdown = () => setIsOpen(!isOpen);
+
   return (
     <div>
-      <h3 className="text-lg font-medium text-white">{title}</h3>
-      <div className="space-y-4">
-        {options.map((option) => (
-          <div key={option} className="flex items-center">
-            <input
-              id={`mobile-filter-${title.toLowerCase()}-${option}`}
-              name={`${title.toLowerCase()}[]`}
-              value={option}
-              type="checkbox"
-              checked={selectedOptions.includes(option)}
-              onChange={onOptionChange}
-              className="h-4 w-4 rounded border-gray-700 text-indigo-600 focus:ring-indigo-500"
-            />
-            <label
-              htmlFor={`mobile-filter-${title.toLowerCase()}-${option}`}
-              className="ml-3 text-sm text-white"
-            >
-              {option}
-            </label>
-          </div>
-        ))}
-      </div>
+      <h3 className="text-lg font-medium text-white flex justify-between items-center" onClick={toggleDropdown}>
+        {title}
+        <svg
+          className={`ml-2 h-5 w-5 text-gray-500 ${isOpen ? 'rotate-180' : ''}`}
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+        </svg>
+      </h3>
+      {isOpen && (
+        <div className="space-y-4">
+          {options.map((option) => (
+            <div key={option} className="flex items-center">
+              <input
+                id={`mobile-filter-${title.toLowerCase()}-${option}`}
+                name={`${title.toLowerCase()}[]`}
+                value={option}
+                type="checkbox"
+                checked={selectedOptions.includes(option)}
+                onChange={onOptionChange}
+                className="h-4 w-4 rounded border-gray-700 text-indigo-600 focus:ring-indigo-500"
+              />
+              <label
+                htmlFor={`mobile-filter-${title.toLowerCase()}-${option}`}
+                className="ml-3 text-sm text-white"
+              >
+                {option}
+              </label>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
@@ -221,8 +237,6 @@ const StatusDot = ({ status }) => {
     }, {});
   };
 
-  // Group the filtered tests by status
-    // Group the filtered tests by status
     const groupedTests = groupTestsByStatus(filteredTestData);
 
     // Calculate the total number of tests
@@ -238,34 +252,34 @@ const StatusDot = ({ status }) => {
   
     return (
       <div className="bg-gray-900">
-      {/* Desktop Filters */}
-      <div className="border-b border-gray-700 bg-gray-900 pb-4">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between space-x-4">
-            {/* Dropdown for Team */}
-            <Dropdown
-              title="Team"
-              options={['Legacy', 'Publishing', 'Celebrations']}
-              selectedOptions={filters.team}
-              onOptionChange={(e) => handleFilterChange('team', e.target.value, e.target.checked)}
-            />
-            {/* Dropdown for Test Type */}
-            <Dropdown
-              title="Test Type"
-              options={['UI Tests', 'API Tests']}
-              selectedOptions={filters.testType}
-              onOptionChange={(e) => handleFilterChange('testType', e.target.value, e.target.checked)}
-            />
-            {/* Dropdown for Status */}
-            <Dropdown
-              title="Status"
-              options={['Passed', 'Failed', 'Untested']}
-              selectedOptions={filters.status}
-              onOptionChange={(e) => handleFilterChange('status', e.target.value, e.target.checked)}
-            />
-          </div>
-        </div>
-      </div>
+      
+<div className="hidden sm:block border-b border-gray-700 bg-gray-900 pb-4">
+  <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="flex justify-between space-x-4">
+      {/* Dropdown for Team */}
+      <Dropdown
+        title="Team"
+        options={['Legacy', 'Publishing', 'Celebrations']}
+        selectedOptions={filters.team}
+        onOptionChange={(e) => handleFilterChange('team', e.target.value, e.target.checked)}
+      />
+      {/* Dropdown for Test Type */}
+      <Dropdown
+        title="Test Type"
+        options={['UI Tests', 'API Tests']}
+        selectedOptions={filters.testType}
+        onOptionChange={(e) => handleFilterChange('testType', e.target.value, e.target.checked)}
+      />
+      {/* Dropdown for Status */}
+      <Dropdown
+        title="Status"
+        options={['Passed', 'Failed', 'Untested']}
+        selectedOptions={filters.status}
+        onOptionChange={(e) => handleFilterChange('status', e.target.value, e.target.checked)}
+      />
+    </div>
+  </div>
+</div>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-xl font-semibold leading-6 text-white mt-6">
           Yearbook Test Dashboard
