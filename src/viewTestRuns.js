@@ -222,15 +222,22 @@ const StatusDot = ({ status }) => {
   };
 
   // Group the filtered tests by status
-  const groupedTests = groupTestsByStatus(filteredTestData);
+    // Group the filtered tests by status
+    const groupedTests = groupTestsByStatus(filteredTestData);
 
-  // Calculate the total number of tests
-  const totalTests = filteredTestData.length;
-
+    // Calculate the total number of tests
+    const totalTests = filteredTestData.length;
   
-
-  return (
-    <div className="bg-gray-900">
+    // Define the stats for the cards
+    const stats = [
+      { name: 'Passed', value: groupedTests['Passed'] ? groupedTests['Passed'].length : 0 },
+      { name: 'Failed', value: groupedTests['Failed'] ? groupedTests['Failed'].length : 0 },
+      { name: 'Untested', value: groupedTests['Untested'] ? groupedTests['Untested'].length : 0 },
+      { name: 'Total', value: totalTests },
+    ];
+  
+    return (
+      <div className="bg-gray-900">
       {/* Desktop Filters */}
       <div className="border-b border-gray-700 bg-gray-900 pb-4">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -268,22 +275,17 @@ const StatusDot = ({ status }) => {
           <div className="spinner"></div>
         ) : (
           <>
-            <div className="grid grid-cols-1 gap-4 mt-6 bg-white/5 sm:grid-cols-2 lg:grid-cols-4">
-              {['Passed', 'Failed', 'Untested'].map((status) => (
-                <div key={status} className="bg-gray-800 p-4 rounded-lg shadow-lg">
-                  <div className="text-sm font-medium text-gray-300">{status}</div>
-                  <div className="mt-2 text-4xl font-semibold text-white">
-                    {groupedTests[status] ? groupedTests[status].length : 0}
-                  </div>
+            <div className="grid grid-cols-1 gap-px bg-white/5 sm:grid-cols-2 lg:grid-cols-4">
+              {stats.map((stat) => (
+                <div key={stat.name} className="bg-gray-900 px-4 py-6 sm:px-6 lg:px-8">
+                  <p className="text-sm font-medium leading-6 text-gray-400">{stat.name}</p>
+                  <p className="mt-2 flex items-baseline gap-x-2">
+                    <span className="text-4xl font-semibold tracking-tight text-white">{stat.value}</span>
+                  </p>
                 </div>
               ))}
-              <div className="bg-gray-800 p-4 rounded-lg shadow-lg">
-                <div className="text-sm font-medium text-gray-300">Total</div>
-                <div className="mt-2 text-4xl font-semibold text-white">
-                  {totalTests}
-                </div>
-              </div>
             </div>
+
 
             <div id="table-container" className="mt-6">
               <div id="run-tests-container" className="flex justify-end mb-2 hidden">
