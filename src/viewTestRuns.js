@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { fetchData, applyFilters } from './view-test-runs-main';
+import axios from 'axios';
+
+import { Link } from 'react-router-dom';
 
 // Dropdown component
 const Dropdown = ({ title, options, selectedOptions, onOptionChange }) => {
@@ -120,42 +123,58 @@ const StatusFilter = ({ selectedStatuses, onFilterChange }) => {
 const MobileFilterSection = ({ title, options, selectedOptions, onOptionChange }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const toggleDropdown = () => setIsOpen(!isOpen);
+  const toggleSection = () => setIsOpen(!isOpen);
 
   return (
-    <div>
-      <h3 className="text-lg font-medium text-white flex justify-between items-center" onClick={toggleDropdown}>
-        {title}
-        <svg
-          className={`ml-2 h-5 w-5 text-gray-500 ${isOpen ? 'rotate-180' : ''}`}
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          aria-hidden="true"
+    <div className="border-t border-gray-200 px-4 py-6">
+      <h3 className="-mx-2 -my-3 flow-root">
+        <button
+          type="button"
+          className="flex w-full items-center justify-between bg-gray-800 px-2 py-3 text-sm text-gray-400"
+          aria-controls={`filter-section-${title.toLowerCase()}`}
+          aria-expanded={isOpen}
+          onClick={toggleSection}
         >
-          <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
-        </svg>
+          <span className="font-medium text-white-900">{title}</span>
+          <span className="ml-6 flex items-center">
+            <svg
+              className={`h-5 w-5 transform ${isOpen ? '-rotate-180' : 'rotate-0'}`}
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fillRule="evenodd"
+                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </span>
+        </button>
       </h3>
       {isOpen && (
-        <div className="space-y-4">
-          {options.map((option) => (
-            <div key={option} className="flex items-center">
-              <input
-                id={`mobile-filter-${title.toLowerCase()}-${option}`}
-                name={`${title.toLowerCase()}[]`}
-                value={option}
-                type="checkbox"
-                checked={selectedOptions.includes(option)}
-                onChange={onOptionChange}
-                className="h-4 w-4 rounded border-gray-700 text-indigo-600 focus:ring-indigo-500"
-              />
-              <label
-                htmlFor={`mobile-filter-${title.toLowerCase()}-${option}`}
-                className="ml-3 text-sm text-white"
-              >
-                {option}
-              </label>
-            </div>
-          ))}
+        <div className="pt-6" id={`filter-section-${title.toLowerCase()}`}>
+          <div className="space-y-6">
+            {options.map((option) => (
+              <div key={option} className="flex items-center">
+                <input
+                  id={`mobile-filter-${title.toLowerCase()}-${option}`}
+                  name={`${title.toLowerCase()}[]`}
+                  value={option}
+                  type="checkbox"
+                  checked={selectedOptions.includes(option)}
+                  onChange={onOptionChange}
+                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                />
+                <label
+                  htmlFor={`mobile-filter-${title.toLowerCase()}-${option}`}
+                  className="ml-3 text-sm text-gray-500"
+                >
+                  {option}
+                </label>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
@@ -165,6 +184,8 @@ const ViewTestRuns = () => {
   const [allTestData, setAllTestData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selected, setSelected] = useState([]);
+  const [runTestsBtnText, setRunTestsBtnText] = useState('Run Tests');
+
   const [filters, setFilters] = useState({
     team: [],
     testType: [],
@@ -185,14 +206,54 @@ const ViewTestRuns = () => {
   }, []);
 
   const handleSelectAll = (e) => {
-    setSelected(e.target.checked ? allTestData.map((item) => item.id) : []);
+    if (e.target.checked) {
+      // If "Select All" is checked, select all test IDs
+      setSelected(filteredTestData.map((item) => item.id));
+    } else {
+      // If "Select All" is unchecked, clear the selection
+      setSelected([]);
+    }
   };
 
-  const handleSelect = (id) => {
-    setSelected((prevSelected) =>
-      prevSelected.includes(id) ? prevSelected.filter((item) => item !== id) : [...prevSelected, id]
-    );
+  const handleSelect = (id, filePath) => {
+    setSelected((prevSelected) => {
+      if (prevSelected.some(item => item.id === id)) {
+        // If the item is already selected, unselect it
+        return prevSelected.filter((item) => item.id !== id);
+      } else {
+        // If the item is not selected, select it
+        const selectedTest = allTestData.find(test => test.id === id); // find the selected test data
+        console.log(selectedTest); // log the selected test data
+        return [...prevSelected, { id, filePath }]; // store filePath along with id
+      }
+    });
   };
+
+    // Add a new useEffect hook to handle the side effects of running the tests
+    useEffect(() => {
+      if (runTestsBtnText === 'Running...') {
+        const testPromises = selected.map(({ id, filePath }) => { // destructure filePath from selected item
+          // Replace this URL with the URL of your test running service
+          return axios.post('https://xmichysgq4emm6orafcdnwwhwu0lvmez.lambda-url.us-west-2.on.aws/', { filePath });
+        });
+  
+        Promise.all(testPromises)
+          .then(() => {
+            alert('All tests run successfully.');
+            setRunTestsBtnText('Run Tests');
+            setSelected([]);
+          })
+          .catch(error => {
+            console.error(error);
+            setRunTestsBtnText('Run Tests');
+            alert('An error occurred while running the tests.');
+          });
+      }
+    }, [runTestsBtnText, selected]);
+  
+    const handleRunTests = () => {
+      setRunTestsBtnText('Running...');
+    };
 
   const filteredTestData = applyFilters(allTestData, filters);
 // Inside the TestDashboard component, before the return statement
@@ -302,14 +363,15 @@ const StatusDot = ({ status }) => {
 
 
             <div id="table-container" className="mt-6">
-              <div id="run-tests-container" className="flex justify-end mb-2 hidden">
-                <button
-                  type="button"
-                  id="run-tests-btn"
-                  className="inline-flex items-center rounded bg-white px-2 py-1 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                >
-                  Run Tests
-                </button>
+              <div id="run-tests-container" className="flex justify-end mb-2">
+              <button
+      type="button"
+      id="run-tests-btn"
+      className="inline-flex items-center rounded bg-white px-2 py-1 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+      onClick={handleRunTests}
+    >
+      {runTestsBtnText}
+    </button>
               </div>
 
                     {/* Mobile Filters Button */}
@@ -322,69 +384,69 @@ const StatusDot = ({ status }) => {
       </button>
 
       {/* Mobile Filters */}
-      <div
-        className={`fixed inset-0 z-40 sm:hidden transition-transform ${
-          isMobileFiltersOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-        id="mobile-filters"
-        role="dialog"
-        aria-modal="true"
+<div
+  className={`fixed inset-0 z-40 sm:hidden transition-transform ${
+    isMobileFiltersOpen ? 'translate-x-0' : 'translate-x-full'
+  }`}
+  id="mobile-filters"
+  role="dialog"
+  aria-modal="true"
+>
+  <div className="fixed inset-0 bg-black bg-opacity-25" onClick={toggleMobileFilters}></div>
+  <div className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-gray-800 py-4 pb-12 shadow-xl">
+    {/* Close button */}
+    <div className="flex items-center justify-between px-4">
+      <h2 className="text-lg font-medium text-white">Filters</h2>
+      <button
+        type="button"
+        className="mobile-filters-close -mr-2 flex h-10 w-10 items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400"
+        onClick={toggleMobileFilters}
       >
-        <div className="fixed inset-0 bg-black bg-opacity-25" onClick={toggleMobileFilters}></div>
-        <div className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-gray-800 py-4 pb-12 shadow-xl">
-          {/* Close button */}
-          <div className="flex items-center justify-between px-4">
-            <h2 className="text-lg font-medium text-white">Filters</h2>
-            <button
-              type="button"
-              className="mobile-filters-close -mr-2 flex h-10 w-10 items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400"
-              onClick={toggleMobileFilters}
-            >
-              <span className="sr-only">Close menu</span>
-              {/* Close icon */}
-            </button>
-          </div>
+        <span className="sr-only">Close menu</span>
+        {/* Close icon */}
+      </button>
+    </div>
 
-          {/* Mobile filter options */}
-          <div className="px-4 py-6">
-        {/* Filter by Team */}
-        <MobileFilterSection
-          title="Team"
-          options={['Legacy', 'Publishing', 'Celebrations']}
-          selectedOptions={filters.team}
-          onOptionChange={(e) => handleFilterChange('team', e.target.value, e.target.checked)}
-        />
+    {/* Mobile filter options */}
+    <form className="mt-4">
+      {/* Filter by Team */}
+      <MobileFilterSection
+        title="Team"
+        options={['Legacy', 'Publishing', 'Celebrations']}
+        selectedOptions={filters.team}
+        onOptionChange={(e) => handleFilterChange('team', e.target.value, e.target.checked)}
+      />
 
-        {/* Filter by Test Type */}
-        <MobileFilterSection
-          title="Test Type"
-          options={['UI Tests', 'API Tests']}
-          selectedOptions={filters.testType}
-          onOptionChange={(e) => handleFilterChange('testType', e.target.value, e.target.checked)}
-        />
+      {/* Filter by Test Type */}
+      <MobileFilterSection
+        title="Test Type"
+        options={['UI Tests', 'API Tests']}
+        selectedOptions={filters.testType}
+        onOptionChange={(e) => handleFilterChange('testType', e.target.value, e.target.checked)}
+      />
 
-        {/* Filter by Status */}
-        <MobileFilterSection
-          title="Status"
-          options={['Passed', 'Failed', 'Untested']}
-          selectedOptions={filters.status}
-          onOptionChange={(e) => handleFilterChange('status', e.target.value, e.target.checked)}
-        />
-      </div>
-        </div>
-      </div>
+      {/* Filter by Status */}
+      <MobileFilterSection
+        title="Status"
+        options={['Passed', 'Failed', 'Untested']}
+        selectedOptions={filters.status}
+        onOptionChange={(e) => handleFilterChange('status', e.target.value, e.target.checked)}
+      />
+    </form>
+  </div>
+</div>
 
               <table className="w-full text-left">
                 <thead className="border-b border-gray-800 text-sm text-white">
                   <tr>
                     <th scope="col" className="px-6 py-3">
-                      <input
-                        type="checkbox"
-                        id="select-all"
-                        className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                        onChange={handleSelectAll}
-                        checked={selected.length === allTestData.length}
-                      />
+                    <input
+  type="checkbox"
+  id="select-all"
+  className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+  onChange={handleSelectAll}
+  checked={selected.length === filteredTestData.length && filteredTestData.length > 0}
+/>
                     </th>
                     <th scope="col" className="px-6 py-3 text-sm font-semibold" id="test-name-header">
                       Test Name
@@ -399,19 +461,32 @@ const StatusDot = ({ status }) => {
                 </thead>
                 
 <tbody className="divide-y divide-gray-800 bg-gray-900" id="table-body">
-  {filteredTestData.map((test) => (
-    <tr key={test.id}>
-      <td className="px-6 py-4">
-        <input
-          type="checkbox"
-          className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-          checked={selected.includes(test.id)}
-          onChange={() => handleSelect(test.id)}
-        />
-      </td>
+{filteredTestData.map((test) => (
+  <tr key={test.id}>
+    <td className="px-6 py-4">
+    <input
+  type="checkbox"
+  className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+  onChange={() => handleSelect(test.id, test.filePath)} // pass filePath here
+  checked={selected.some(item => item.id === test.id)}
+/>
+    </td>
       <td className="px-6 py-4 text-sm text-gray-300">
-        {test.formattedTestName}
-      </td>
+      <Link 
+  to={`/RunDetails?testName=${encodeURIComponent(test.testName.replace(/\s/g, '-'))}`} 
+  className="hover:underline"
+>
+  {test.formattedTestName}
+</Link>
+  <div className="mt-2">
+    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 mr-2">
+      {test.team}
+    </span>
+    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
+      {test.status}
+    </span>
+  </div>
+</td>
       <td className="px-6 py-4 text-sm flex items-center text-gray-300">
         <StatusDot status={test.status} />
         <span className="text-xs font-semibold">{test.status}</span>
@@ -441,6 +516,4 @@ const getStatusColor = (status) => {
 };
 
 export default ViewTestRuns;
-
-
 
