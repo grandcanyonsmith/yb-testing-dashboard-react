@@ -7,7 +7,7 @@ import 'prismjs/components/prism-bash';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.js';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
 
-const TestComponent = () => {
+const ViewCode = () => {
   const [userRequest, setUserRequest] = useState('');
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState({ submit: false, execute: false });
@@ -118,4 +118,4 @@ const TestComponent = () => {
   );
 };
 
-export default TestComponent;
+export default ViewCode;
