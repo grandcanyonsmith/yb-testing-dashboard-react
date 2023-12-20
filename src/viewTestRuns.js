@@ -208,7 +208,7 @@ const ViewTestRuns = () => {
   const handleSelectAll = (e) => {
     if (e.target.checked) {
       // If "Select All" is checked, select all test IDs
-      setSelected(filteredTestData.map((item) => item.id));
+      setSelected(filteredTestData.map((item) => item.runId));
     } else {
       // If "Select All" is unchecked, clear the selection
       setSelected([]);
@@ -222,8 +222,6 @@ const ViewTestRuns = () => {
         return prevSelected.filter((item) => item.id !== id);
       } else {
         // If the item is not selected, select it
-        const selectedTest = allTestData.find(test => test.id === id); // find the selected test data
-        console.log(selectedTest); // log the selected test data
         return [...prevSelected, { id, filePath }]; // store filePath along with id
       }
     });
@@ -462,13 +460,13 @@ const StatusDot = ({ status }) => {
                 
 <tbody className="divide-y divide-gray-800 bg-gray-900" id="table-body">
 {filteredTestData.map((test) => (
-  <tr key={test.id}>
+  <tr key={test.runId}>
     <td className="px-6 py-4">
     <input
   type="checkbox"
   className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-  onChange={() => handleSelect(test.id, test.filePath)} // pass filePath here
-  checked={selected.some(item => item.id === test.id)}
+  onChange={() => handleSelect(test.runId, test.filePath)} // pass filePath here
+  checked={selected.some(item => item.id === test.runId)}
 />
     </td>
       <td className="px-6 py-4 text-sm text-gray-300">
@@ -506,14 +504,6 @@ const StatusDot = ({ status }) => {
   );
 };
 
-const getStatusColor = (status) => {
-  const statusColors = {
-    Passed: 'bg-green-500',
-    Failed: 'bg-red-500',
-    Untested: 'bg-yellow-500',
-  };
-  return statusColors[status] || 'bg-gray-500';
-};
 
 export default ViewTestRuns;
 
