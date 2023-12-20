@@ -161,7 +161,7 @@ const MobileFilterSection = ({ title, options, selectedOptions, onOptionChange }
     </div>
   );
 };
-const TestDashboard = () => {
+const ViewTestRuns = () => {
   const [allTestData, setAllTestData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selected, setSelected] = useState([]);
@@ -440,7 +440,7 @@ const getStatusColor = (status) => {
   return statusColors[status] || 'bg-gray-500';
 };
 
-export default TestDashboard;
+export default ViewTestRuns;
 
 
 
