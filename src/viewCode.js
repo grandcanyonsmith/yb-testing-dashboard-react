@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import axios from 'axios';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism-okaidia.css';
@@ -6,114 +6,168 @@ import 'prismjs/components/prism-python';
 import 'prismjs/components/prism-bash';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.js';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
+import './ViewCode.css';
+
+// API URLs
+const API_URLS = {
+  submit: 'https://kvqpfgxn2jz5pyh4wz7thbmhay0hqcvh.lambda-url.us-west-2.on.aws/',
+  execute: 'https://xmichysgq4emm6orafcdnwwhwu0lvmez.lambda-url.us-west-2.on.aws/',
+  fetchFileContents: 'https://zyw4xz6b5m2c7mdbhhsoerydve0mgnfl.lambda-url.us-west-2.on.aws/',
+};
+
+// Loading states
+const LOADING_STATES = {
+  idle: 'idle',
+  submit: 'submit',
+  execute: 'execute',
+  fetchFileContents: 'fetchFileContents',
+};
+
+// Initial state
+const initialState = {
+  userRequest: '',
+  code: '',
+  testName: '',
+  output: { stdout: '', stderr: '' },
+  viewCode: true,
+  loadingState: LOADING_STATES.idle,
+  error: null,
+};
+
+// Reducer function
+function reducer(state, action) {
+  switch (action.type) {
+    case 'setUserRequest':
+      return { ...state, userRequest: action.payload };
+    case 'setCode':
+      return { ...state, code: action.payload };
+    case 'setTestName':
+      return { ...state, testName: action.payload };
+    case 'setOutput':
+      return { ...state, output: action.payload };
+    case 'toggleViewCode':
+      return { ...state, viewCode: !state.viewCode };
+    case 'setLoadingState':
+      return { ...state, loadingState: action.payload };
+    case 'setError':
+      return { ...state, error: action.payload };
+    default:
+      throw new Error();
+  }
+}
+
+// API request function
+async function handleApiRequest(url, body) {
+  try {
+    const response = await axios.post(url, body);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
 
 const ViewCode = () => {
-  const [userRequest, setUserRequest] = useState('');
-  const [code, setCode] = useState('');
-  const [loading, setLoading] = useState({ submit: false, execute: false });
-  const [testName, setTestName] = useState('');
-  const [output, setOutput] = useState({ stdout: '', stderr: '' });
-  const [viewCode, setViewCode] = useState(true);
-
-  const codeRef = useRef(null);
-  const stdoutRef = useRef(null);
-  const stderrRef = useRef(null);
-
-  const toggleView = () => {
-    setViewCode(!viewCode);
-  };
-
-  const handleApiRequest = async (url, body, successCallback, errorCallback) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const submitUserRequest = async () => {
+    dispatch({ type: 'setLoadingState', payload: LOADING_STATES.submit });
     try {
-      const response = await axios.post(url, body);
-      successCallback(response);
+      const data = await handleApiRequest(API_URLS.submit, { fileName: state.testName, request: state.userRequest, code: state.code });
+      dispatch({ type: 'setCode', payload: data.newCode });
     } catch (error) {
-      errorCallback(error);
+      dispatch({ type: 'setError', payload: error });
+    } finally {
+      dispatch({ type: 'setLoadingState', payload: LOADING_STATES.idle });
     }
   };
 
-  const submitUserRequest = () => {
-    setLoading(prev => ({ ...prev, submit: true }));
-    handleApiRequest(
-      'https://kvqpfgxn2jz5pyh4wz7thbmhay0hqcvh.lambda-url.us-west-2.on.aws/',
-      { fileName: testName, request: userRequest, code: code },
-      response => setCode(response.data.newCode),
-      error => console.error(error),
-    ).finally(() => setLoading(prev => ({ ...prev, submit: false })));
+  const executeCode = async () => {
+    dispatch({ type: 'setLoadingState', payload: LOADING_STATES.execute });
+    try {
+      const data = await handleApiRequest(API_URLS.execute, { filePath: state.testName, code: state.code });
+      dispatch({ type: 'setOutput', payload: { stdout: data.StandardOutputContent, stderr: data.StandardErrorContent } });
+      dispatch({ type: 'toggleViewCode' });
+    } catch (error) {
+      dispatch({ type: 'setError', payload: error });
+    } finally {
+      dispatch({ type: 'setLoadingState', payload: LOADING_STATES.idle });
+    }
   };
-
-  const executeCode = () => {
-    setLoading(prev => ({ ...prev, execute: true }));
-    handleApiRequest(
-      'https://xmichysgq4emm6orafcdnwwhwu0lvmez.lambda-url.us-west-2.on.aws/',
-      { filePath: testName, code: code },
-      response => {
-        setOutput({
-          stdout: response.data.StandardOutputContent,
-          stderr: response.data.StandardErrorContent,
-        });
-        toggleView();
-      },
-      error => console.error('Error executing code:', error),
-    ).finally(() => setLoading(prev => ({ ...prev, execute: false })));
+  useEffect(() => {
+    const filePath = new URL(window.location.href).searchParams.get('testName');
+    if (filePath) {
+      dispatch({ type: 'setTestName', payload: filePath });
+      fetchFileContents(filePath);
+    } else {
+      console.error('Test name not provided in the URL');
+    }
+  }, []);
+  
+  const fetchFileContents = async () => {
+    dispatch({ type: 'setLoadingState', payload: LOADING_STATES.fetchFileContents });
+    try {
+      const data = await handleApiRequest(API_URLS.fetchFileContents, { filePath: 'tests/publishing/media_versioning/test_yearbook_drafts.py', requestType: 'FETCH_FILE_CONTENTS', branchName: 'main' });
+      dispatch({ type: 'setCode', payload: data });
+    } catch (error) {
+      dispatch({ type: 'setError', payload: error });
+    } finally {
+      dispatch({ type: 'setLoadingState', payload: LOADING_STATES.idle });
+    }
   };
 
   useEffect(() => {
-    const testNameFromURL = new URL(window.location.href).searchParams.get('testName');
-    setTestName(testNameFromURL);
-    submitUserRequest();
+    fetchFileContents();
   }, []);
 
   useEffect(() => {
     Prism.highlightAll();
-  }, [code, output.stdout, output.stderr]);
+  }, [state.code, state.output.stdout, state.output.stderr]);
+
+  const toggleViewCode = () => {
+    dispatch({ type: 'toggleViewCode' });
+  };
+
+  const handleUserRequestChange = (e) => {
+    dispatch({ type: 'setUserRequest', payload: e.target.value });
+  };
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen flex flex-col justify-between">
-      <button onClick={() => window.history.back()} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        Back
-      </button>
-      <h1 className="text-xl text-left my-4">{testName}</h1>
-      <div className="flex space-x-1 rounded-xl bg-gray-800 p-1">
-        <button onClick={toggleView} className={`tab-button w-full rounded-lg py-2.5 text-md font-medium leading-5 ${viewCode ? 'text-white bg-gray-600' : 'text-gray-400 hover:text-white'} focus:outline-none flex items-center justify-center`}>
+    <div className="ViewCode">
+    <a href="#" className="text-sm font-semibold leading-7" style={{position: 'absolute', top: '0', left: '10px', color: 'white'}}>
+      <span aria-hidden="true">&larr;</span> Back
+    </a>
+    
+      
+      <div style={{marginTop: '30px'}} className="tabContainer">
+        <button onClick={toggleViewCode} className={`tabButton ${state.viewCode ? 'active' : ''}`}>
           Code
        </button>
-        <button onClick={toggleView} className={`tab-button w-full rounded-lg py-2.5 text-md font-medium leading-5 ${!viewCode ? 'text-white bg-gray-600' : 'text-gray-400 hover:text-white'} focus:outline-none flex items-center justify-center`}>
+        <button onClick={toggleViewCode} className={`tabButton ${!state.viewCode ? 'active' : ''}`}>
           Logs
        </button>
       </div>
-      <div className={`flex-grow w-full overflow-auto flex flex-col mb-16 ${viewCode ? '' : 'hidden'}`}>
-        <pre className="line-numbers bg-gray-900">
-          <code ref={codeRef} className="language-python w-full text-lg leading-relaxed">{code}</code>
+      <div className={`codeContainer ${state.viewCode ? '' : 'hidden'}`}>
+        <pre className="line-numbers">
+          <code className="language-python">{state.code}</code>
         </pre>
       </div>
-      <div className={`flex-grow w-full overflow-auto mb-16 bg-gray-900 ${viewCode ? 'hidden' : ''}`}>
-        <pre className="line-numbers language-bash bg-gray-900">
-          <code ref={stdoutRef}>{output.stdout}</code>
+      <div className={`logContainer ${state.viewCode ? 'hidden' : ''}`}>
+        <pre className="line-numbers language-bash">
+          <code>{state.output.stdout}</code>
         </pre>
-        <pre className="line-numbers language-bash text-red-500 bg-gray-900">
-          <code ref={stderrRef}>{output.stderr}</code>
+        <pre className="line-numbers language-bash error">
+          <code>{state.output.stderr}</code>
         </pre>
       </div>
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-gray-100 border-t border-gray-300 p-0.75 shadow-md ">
-        <div className="relative flex items-center border rounded-lg shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-indigo-600">
-          <textarea value={userRequest} onChange={(e) => setUserRequest(e.target.value)} className="block w-full resize-none border-none bg-transparent text-base sm:text-sm sm:leading-6 placeholder:text-gray-400 focus:ring-0 rounded-l-lg p-2" placeholder="Enter a Request..." style={{ height: '2.5rem', color: 'black' }}></textarea>
-          <button onClick={submitUserRequest} className="ml-auto inline-flex items-center rounded-r-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600" disabled={loading.submit}>
-            {loading.submit ? (
-              <div className="loader"></div>
-            ) : (
-              'Submit'
-            )}
-          </button>
-          <button onClick={executeCode} className={`inline-flex items-center rounded-r-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-600 ${loading.execute ? 'cursor-not-allowed' : ''}`} disabled={loading.execute}>
-            {loading.execute ? (
-              <div className="loader"></div>
-            ) : (
-              'Execute'
-            )}
-          </button>
-        </div>
+      <div className="inputContainer">
+        <textarea value={state.userRequest} onChange={handleUserRequestChange} className="userRequestInput" placeholder="Enter a Request..."></textarea>
+        <button onClick={submitUserRequest} className={`submitButton ${state.loadingState === LOADING_STATES.submit ? 'loading' : ''}`} disabled={state.loadingState === LOADING_STATES.submit}>
+            Submit
+        </button>
+        <button onClick={executeCode} className={`executeButton ${state.loadingState === LOADING_STATES.execute ? 'loading' : ''}`} disabled={state.loadingState === LOADING_STATES.execute}>
+            Execute
+        </button>
       </div>
+      {state.error && <div className="error">{state.error.message}</div>}
     </div>
   );
 };
