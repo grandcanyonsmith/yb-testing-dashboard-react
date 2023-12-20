@@ -4,6 +4,19 @@ import axios from 'axios';
 
 import { Link } from 'react-router-dom';
 
+
+// Loading Card component
+// Loading Card component
+const LoadingCard = ({ name }) => (
+  <div className="bg-gray-900 px-4 py-6 sm:px-6 lg:px-8">
+    <p className="text-sm font-medium leading-6 text-gray-400">{name}</p>
+    <p className="mt-2 flex items-baseline gap-x-2">
+      <div className="spinner"></div>
+      <span className="text-4xl font-semibold tracking-tight text-white">Loading...</span>
+    </p>
+  </div>
+);
+
 // Dropdown component
 const Dropdown = ({ title, options, selectedOptions, onOptionChange }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -309,10 +322,10 @@ const StatusDot = ({ status }) => {
       { name: 'Total', value: totalTests },
     ];
   
-    return (
-      <div className="bg-gray-900">
-      
-<div className="hidden sm:block border-b border-gray-700 bg-gray-900 pb-4">
+// Inside the TestDashboard component
+return (
+  <div className="bg-gray-900 min-h-screen"> {/* Change the background color to gray-800 */}
+  <div className="hidden sm:block border-b border-gray-700 bg-gray-800 pb-4">
   <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div className="flex justify-between space-x-4">
       {/* Dropdown for Team */}
@@ -339,23 +352,27 @@ const StatusDot = ({ status }) => {
     </div>
   </div>
 </div>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-xl font-semibold leading-6 text-white mt-6">
-          Yearbook Test Dashboard
-        </h1>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 className="text-xl font-semibold leading-6 text-white mt-6">
+        Yearbook Test Dashboard
+      </h1>
 
-        {isLoading ? (
-          <div className="spinner"></div>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 gap-px bg-white/5 sm:grid-cols-2 lg:grid-cols-4">
-              {stats.map((stat) => (
-                <div key={stat.name} className="bg-gray-900 px-4 py-6 sm:px-6 lg:px-8">
-                  <p className="text-sm font-medium leading-6 text-gray-400">{stat.name}</p>
-                  <p className="mt-2 flex items-baseline gap-x-2">
-                    <span className="text-4xl font-semibold tracking-tight text-white">{stat.value}</span>
-                  </p>
-                </div>
+      {isLoading ? (
+        <div className="grid grid-cols-1 gap-px bg-white/5 sm:grid-cols-2 lg:grid-cols-4">
+          {stats.map((stat) => (
+            <LoadingCard key={stat.name} name={stat.name} />
+          ))}
+        </div>
+) : (
+  <>
+    <div className="grid grid-cols-1 gap-px bg-white/5 sm:grid-cols-2 lg:grid-cols-4">
+      {stats.map((stat) => (
+        <div key={stat.name} className="bg-gray-900 px-4 py-6 sm:px-6 lg:px-8">
+          <p className="text-sm font-medium leading-6 text-gray-400">{stat.name}</p>
+          <p className="mt-2 flex items-baseline gap-x-2">
+            <span className="text-4xl font-semibold tracking-tight text-white">{stat.value}</span>
+          </p>
+        </div>
               ))}
             </div>
 
