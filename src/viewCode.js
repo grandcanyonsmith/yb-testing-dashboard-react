@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism-okaidia.css';
@@ -64,7 +64,7 @@ async function handleApiRequest(url, body) {
 
 const ViewCode = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
@@ -130,7 +130,7 @@ const ViewCode = () => {
     // Grab the testName from the URL
     const testName = new URLSearchParams(location.search).get('testName');
     // Redirect to the RunDetails page with testName as a query parameter
-    history.push(`/RunDetails?testName=${encodeURIComponent(testName)}`);
+    navigate(`/RunDetails?testName=${encodeURIComponent(testName)}`);
   };
 
   return (
