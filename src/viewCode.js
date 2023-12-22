@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer } from 'react';
-import { useHistory } from 'react-router-dom'; // Added for history navigation
+import { useHistory, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism-okaidia.css';
@@ -12,7 +12,7 @@ import './ViewCode.css';
 const API_URLS = {
   submit: 'https://kvqpfgxn2jz5pyh4wz7thbmhay0hqcvh.lambda-url.us-west-2.on.aws/',
   execute: 'https://xmichysgq4emm6orafcdnwwhwu0lvmez.lambda-url.us-west-2.on.aws/',
- fetchFileContents: 'https://zyw4xz6b5m2c7mdbhhsoerydve0mgnfl.lambda-url.us-west-2.on.aws/',
+  fetchFileContents: 'https://zyw4xz6b5m2c7mdbhhsoerydve0mgnfl.lambda-url.us-west-2.on.aws/',
 };
 
 const LOADING_STATES = {
@@ -64,7 +64,38 @@ async function handleApiRequest(url, body) {
 
 const ViewCode = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const history = useHistory(); // Used for handling history navigation
+  const history = useHistory();
+  const location = useLocation();
+
+  useEffect(() => {
+    const testName = new URLSearchParams(location.search).get('testName');
+    if (testName) {
+      dispatch({ type: 'setTestName', payload: testName });
+      fetchFileContents(testName);
+    } else {
+      console.error('Test name not provided in the URL');
+    }
+  }, [location.search]);
+
+  const fetchFileContents = async (testName) => {
+    dispatch({ type: 'setLoadingState', payload: LOADING_STATES.fetchFileContents });
+    try {
+      const data = await handleApiRequest(API_URLS.fetchFileContents, { filePath: testName, requestType: 'FETCH_FILE_CONTENTS', branchName: 'main' });
+      dispatch({ type: 'setCode', payload: data });
+    } catch (error) {
+      dispatch({ type: 'setError', payload: error });
+    } finally {
+      dispatch({ type: 'setLoadingState', payload: LOADING_STATES.idle });
+    }
+  };
+
+  useEffect(() => {
+    Prism.highlightAll();
+  }, [state.code, state.output.stdout, state.output.stderr]);
+
+  const handleUserRequestChange = (e) => {
+    dispatch({ type: 'setUserRequest', payload: e.target.value });
+  };
 
   const submitUserRequest = async () => {
     dispatch({ type: 'setLoadingState', payload: LOADING_STATES.submit });
@@ -91,55 +122,22 @@ const ViewCode = () => {
     }
   };
 
-  useEffect(() => {
-    const filePath = new URL(window.location.href).searchParams.get('testName');
-    if (filePath) {
-      dispatch({ type: 'setTestName', payload: filePath });
-      fetchFileContents(filePath);
-    } else {
-      console.error('Test name not provided in the URL');
-    }
-  }, []);
-
-  const fetchFileContents = async () => {
-    dispatch({ type: 'setLoadingState', payload: LOADING_STATES.fetchFileContents });
-    try {
-      const data = await handleApiRequest(API_URLS.fetchFileContents, { filePath: state.testName, requestType: 'FETCH_FILE_CONTENTS', branchName: 'main' });
-      dispatch({ type: 'setCode', payload: data });
-    } catch (error) {
-      dispatch({ type: 'setError', payload: error });
-    } finally {
-      dispatch({ type: 'setLoadingState', payload: LOADING_STATES.idle });
-    }
-  };
-
-  useEffect(() => {
-    fetchFileContents();
-  }, []);
-
-  useEffect(() => {
-    Prism.highlightAll();
-  }, [state.code, state.output.stdout, state.output.stderr]);
-
   const toggleViewCode = () => {
     dispatch({ type: 'toggleViewCode' });
   };
 
-  const handleUserRequestChange = (e) => {
-    dispatch({ type: 'setUserRequest', payload: e.target.value });
-  };
-
   const navigateBack = () => {
-    history.goBack(); // Function to navigate back
+    // Grab the testName from the URL
+    const testName = new URLSearchParams(location.search).get('testName');
+    // Redirect to the RunDetails page with testName as a query parameter
+    history.push(`/RunDetails?testName=${encodeURIComponent(testName)}`);
   };
 
   return (
     <div className="ViewCode">
-      
       <button onClick={navigateBack} className="text-sm font-semibold leading-7" style={{ position: 'absolute', top: '0', left: '10px', color: 'white' }}>
         <span aria-hidden="true">&larr;</span> Back
       </button>
-      
       <div style={{ marginTop: '30px' }} className="tabContainer">
         <button onClick={toggleViewCode} className={`tabButton ${state.viewCode ? 'active' : ''}`}>
           Code
