@@ -7,7 +7,13 @@ import 'prismjs/components/prism-python';
 import 'prismjs/components/prism-bash';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.js';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
-import './ViewCode.css';
+import '../styles/ViewCode.css'
+import BackButton from '../components/BackButton';
+import TabContainer from '../components/TabContainer';
+import CodeContainer from '../components/CodeContainer';
+import LogContainer from '../components/LogContainer';
+import InputContainer from '../components/InputContainer';
+import ErrorDisplay from '../components/ErrorDisplay';
 
 const API_URLS = {
   submit: 'https://kvqpfgxn2jz5pyh4wz7thbmhay0hqcvh.lambda-url.us-west-2.on.aws/',
@@ -67,20 +73,36 @@ const ViewCode = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Use the state and dispatch to create handler functions
+  const handleRequestChange = (e) => {
+    dispatch({ type: 'setUserRequest', payload: e.target.value });
+  };
+
+  const handleSubmit = async () => {
+    // Call the submitUserRequest function or any other logic you need
+    await submitUserRequest();
+  };
+
+  const handleExecute = async () => {
+    // Call the executeCode function or any other logic you need
+    await executeCode();
+  };
   useEffect(() => {
-    const testName = new URLSearchParams(location.search).get('testName');
-    if (testName) {
-      dispatch({ type: 'setTestName', payload: testName });
-      fetchFileContents(testName);
+    let filePath = new URLSearchParams(location.search).get('testName');
+    if (filePath) {
+      filePath = filePath.split('.py')[0] + '.py'; // This will remove anything after .py
+      console.log(filePath); // This will print the filePath to the console
+      dispatch({ type: 'setTestName', payload: filePath });
+      fetchFileContents(filePath);
     } else {
-      console.error('Test name not provided in the URL');
+      console.error('File path not provided in the URL');
     }
   }, [location.search]);
-
-  const fetchFileContents = async (testName) => {
+  
+  const fetchFileContents = async (filePath) => {
     dispatch({ type: 'setLoadingState', payload: LOADING_STATES.fetchFileContents });
     try {
-      const data = await handleApiRequest(API_URLS.fetchFileContents, { filePath: testName, requestType: 'FETCH_FILE_CONTENTS', branchName: 'main' });
+      const data = await handleApiRequest(API_URLS.fetchFileContents, { filePath: filePath, requestType: 'FETCH_FILE_CONTENTS', branchName: 'main' });
       dispatch({ type: 'setCode', payload: data });
     } catch (error) {
       dispatch({ type: 'setError', payload: error });
@@ -112,7 +134,10 @@ const ViewCode = () => {
   const executeCode = async () => {
     dispatch({ type: 'setLoadingState', payload: LOADING_STATES.execute });
     try {
-      const data = await handleApiRequest(API_URLS.execute, { filePath: state.testName, code: state.code });
+      const requestBody = { filePath: state.testName, code: state.code };
+      console.log('Sending request:', requestBody); // Log the request body
+      const data = await handleApiRequest(API_URLS.execute, requestBody);
+      console.log('Received response:', data); // Log the response data
       dispatch({ type: 'setOutput', payload: { stdout: data.StandardOutputContent, stderr: data.StandardErrorContent } });
       dispatch({ type: 'toggleViewCode' });
     } catch (error) {
@@ -127,48 +152,24 @@ const ViewCode = () => {
   };
 
   const navigateBack = () => {
-    // Grab the testName from the URL
     const testName = new URLSearchParams(location.search).get('testName');
-    // Redirect to the RunDetails page with testName as a query parameter
     navigate(`/RunDetails?testName=${encodeURIComponent(testName)}`);
   };
 
   return (
     <div className="ViewCode">
-      <button onClick={navigateBack} className="text-sm font-semibold leading-7" style={{ position: 'absolute', top: '0', left: '10px', color: 'white' }}>
-        <span aria-hidden="true">&larr;</span> Back
-      </button>
-      <div style={{ marginTop: '30px' }} className="tabContainer">
-        <button onClick={toggleViewCode} className={`tabButton ${state.viewCode ? 'active' : ''}`}>
-          Code
-        </button>
-        <button onClick={toggleViewCode} className={`tabButton ${!state.viewCode ? 'active' : ''}`}>
-          Logs
-        </button>
-      </div>
-      <div className={`codeContainer ${state.viewCode ? '' : 'hidden'}`}>
-        <pre className="line-numbers">
-          <code className="language-python">{state.code}</code>
-        </pre>
-      </div>
-      <div className={`logContainer ${state.viewCode ? 'hidden' : ''}`}>
-        <pre className="line-numbers language-bash">
-          <code>{state.output.stdout}</code>
-        </pre>
-        <pre className="line-numbers language-bash error">
-          <code>{state.output.stderr}</code>
-        </pre>
-      </div>
-      <div className="inputContainer">
-        <textarea value={state.userRequest} onChange={handleUserRequestChange} className="userRequestInput" placeholder="Enter a Request..."></textarea>
-        <button onClick={submitUserRequest} className={`submitButton ${state.loadingState === LOADING_STATES.submit ? 'loading' : ''}`} disabled={state.loadingState === LOADING_STATES.submit}>
-          Submit
-        </button>
-        <button onClick={executeCode} className={`executeButton ${state.loadingState === LOADING_STATES.execute ? 'loading' : ''}`} disabled={state.loadingState === LOADING_STATES.execute}>
-          Execute
-        </button>
-      </div>
-      {state.error && <div className="error">{state.error.message}</div>}
+      <BackButton onClick={navigateBack} />
+      <TabContainer activeTab={state.viewCode ? 'Code' : 'Logs'} onTabChange={toggleViewCode} tabs={['Code', 'Logs']} />
+      <CodeContainer code={state.code} language="python" hidden={!state.viewCode} />
+      <LogContainer stdout={state.output.stdout} stderr={state.output.stderr} hidden={state.viewCode} />
+      <InputContainer
+        requestText={state.userRequest}
+        handleRequestChange={handleRequestChange}
+        handleSubmit={handleSubmit}
+        handleExecute={handleExecute}
+        currentLoadingState={state.loadingState}
+      />
+      {state.error && <ErrorDisplay error={state.error} />}
     </div>
   );
 };
