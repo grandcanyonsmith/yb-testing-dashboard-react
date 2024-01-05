@@ -11,7 +11,7 @@ const CodeContainer = ({ code, language, hidden = false }) => {
     Prism.highlightAll();
   }, [code]);
 
-  const containerClass = `codeContainer ${hidden ? 'hidden' : ''}`;
+  const containerClass = `container mx-auto px-4 sm:px-6 lg:px-8 codeContainer ${hidden ? 'hidden' : ''}`;
   const codeClass = `language-${language}`;
 
   return (

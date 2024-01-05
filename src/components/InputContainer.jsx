@@ -47,28 +47,28 @@ const InputContainer = ({ requestText, handleRequestChange, handleSubmit, handle
   }, [errorMessage, toast]);
 
   return (
-    <div className="flex items-start space-x-4">
+    <div className="flex items-start space-x-4 container mx-auto px-4 sm:px-6 lg:px-8">
       <div className="min-w-0 flex-1">
         <form action="#" className="relative">
-          <div className="overflow-hidden rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-indigo-600">
-            <label htmlFor="comment" className="sr-only">
+          <div className="overflow-hidden rounded-md shadow-sm ring-1 ring-inset ring-gray-300  focus-within:ring-indigo-600 container mx-auto px-4 sm:px-6 lg:px-8">
+            <label htmlFor="comment" className="sr-only container mx-auto px-4 sm:px-6 lg:px-8">
               Add your comment
             </label>
             <textarea
-              rows={3}
-              name="comment"
-              id="comment"
-              className="block w-full resize-none border-0 bg-transparent py-2 text-white placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-              placeholder="Enter a Request... For example, 'GET /api/users'"
-              value={requestText}
-              onChange={handleRequestChange}
-              aria-invalid={!!errorMessage}
-            />
+  rows={3}
+  name="comment"
+  id="comment"
+  className="block w-full resize-none border-0 bg-transparent py-2 text-white placeholder:text-gray-400 focus:outline-none  focus:ring-indigo-500 sm:text-sm sm:leading-6 "
+  placeholder="Enter a Request... For example, 'GET /api/users'"
+  value={requestText}
+  onChange={handleRequestChange}
+  aria-invalid={!!errorMessage}
+/>
           </div>
           <div className="absolute inset-x-0 bottom-0 flex justify-between py-2 pl-3 pr-2">
             <div className="flex items-center space-x-5">
               <div className="flex items-center">
-                <Tooltip label="Attach a file">
+                {/* <Tooltip label="Attach a file">
                   <button
                     type="button"
                     className="-m-2.5 flex h-10 w-10 items-center justify-center rounded-full text-gray-400 hover:text-gray-500"
@@ -76,7 +76,7 @@ const InputContainer = ({ requestText, handleRequestChange, handleSubmit, handle
                   >
                     <PaperClipIcon className="h-5 w-5" aria-hidden="true" />
                   </button>
-                </Tooltip>
+                </Tooltip> */}
               </div>
             </div>
             <div className="flex-shrink-0 space-x-2">

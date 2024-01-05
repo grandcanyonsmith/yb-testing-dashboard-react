@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const LogContainer = ({ stdout, stderr, hidden }) => {
   return (
-    <div className={`logContainer ${hidden ? 'hidden' : ''}`}>
+    <div className={`container mx-auto px-4 sm:px-6 lg:px-8 logContainer ${hidden ? 'hidden' : ''}`}>
       <pre className="line-numbers language-bash">
         <code>{stdout}</code>
       </pre>
