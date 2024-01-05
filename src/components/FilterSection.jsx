@@ -102,9 +102,9 @@ const FilterSection = ({ handleFilterChange }) => {
           </Popover.Group>
         </div>
 
-        <div className="bg-gray-900">
-  <div className="mx-auto max-w-7xl px-4 py-3 sm:flex sm:items-center sm:px-6 lg:px-8">
-    <h3 className="hidden sm:block text-sm font-medium text-gray-300">
+        <div className="hidden bg-gray-900">
+  <div className="hidden mx-auto max-w-7xl px-4 py-3 sm:flex sm:items-center sm:px-6 lg:px-8">
+    <h3 className="sm:block text-sm font-medium text-gray-300">
       Filters
       <span className="sr-only">, active</span>
     </h3>
