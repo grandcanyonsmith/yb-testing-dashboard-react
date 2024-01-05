@@ -39,7 +39,7 @@ export default function MobileFilterSection({ handleFilterChange, }) {
   
   // Use the filters array directly in your component
   return (
-    <div className="bg-gray-900">
+    <div className="bg-gray-900 container mx-auto px-4 sm:px-6 lg:px-8">
       <button
         type="button"
         className="px-4 py-2 text-white bg-indigo-600 rounded mt-4 sm:hidden"

@@ -17,9 +17,9 @@ const DashboardHeader = ({ selectedRun, onViewCodeClick }) => {
   };
 
   return (
-    <div className="border-b border-gray-700 pb-5 bg-gray-800">
-      <div className="sm:flex sm:items-baseline sm:justify-between">
-        <button onClick={handleBackClick} className="mr-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+    <div className="border-b border-gray-700 pb-5 bg-gray-800 container mx-auto px-4 sm:px-6 lg:px-8"> 
+      <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between">
+        <button onClick={handleBackClick} className="self-start mb-4 sm:mb-0 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-lg">
           Back
         </button>
         <div className="sm:w-0 sm:flex-1">
@@ -29,21 +29,21 @@ const DashboardHeader = ({ selectedRun, onViewCodeClick }) => {
           <p className="mt-1 truncate text-sm text-gray-400">ID: {selectedRun.id}</p>
         </div>
 
-        <div className="mt-4 flex items-center justify-between sm:ml-6 sm:mt-0 sm:flex-shrink-0 sm:justify-start">
-          <span className="inline-flex items-center rounded-full bg-blue-900 px-2 py-1 text-xs font-medium text-blue-200 ring-1 ring-inset ring-blue-600/20">
+        <div className="mt-4 flex flex-col sm:flex-row items-center justify-between sm:ml-6 sm:mt-0 sm:flex-shrink-0 sm:justify-start">
+          <span className="inline-flex items-center rounded-full bg-blue-900 px-2 py-1 text-xs font-medium text-blue-200 ring-1 ring-inset ring-blue-600/20 mb-2 sm:mb-0 sm:mr-2">
             {selectedRun.team}
           </span>
           {selectedRun.status === 'Passed' && (
-            <span className="inline-flex items-center rounded-full bg-green-700 px-2 py-1 text-xs font-medium text-green-200 ring-1 ring-inset ring-green-600/20 ml-2">
+            <span className="inline-flex items-center rounded-full bg-green-700 px-2 py-1 text-xs font-medium text-green-200 ring-1 ring-inset ring-green-600/20 mb-2 sm:mb-0 sm:mr-2">
               Passed
             </span>
           )}
           {selectedRun.status === 'Failed' && (
-            <span className="inline-flex items-center rounded-full bg-red-700 px-2 py-1 text-xs font-medium text-red-200 ring-1 ring-inset ring-red-600/20 ml-2">
+            <span className="inline-flex items-center rounded-full bg-red-700 px-2 py-1 text-xs font-medium text-red-200 ring-1 ring-inset ring-red-600/20 mb-2 sm:mb-0 sm:mr-2">
               Failed
             </span>
           )}
-          <Menu as="div" className="relative ml-3 inline-block text-left">
+          <Menu as="div" className="relative inline-block text-left">
             <div>
               <Menu.Button className="-my-2 flex items-center rounded-full bg-gray-700 p-2 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 <span className="sr-only">Open options</span>

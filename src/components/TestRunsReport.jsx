@@ -9,6 +9,11 @@ const STATUS_COLORS = {
 const getStatusColor = (status) => STATUS_COLORS[status] || STATUS_COLORS.Default;
 
 const TestRunsReport = ({ previousRunsData, setSelectedRun }) => {
+  const handleClick = (testRun) => {
+    setSelectedRun(testRun);
+    window.scrollTo(0, 0);
+  };
+
   return (
     <div className="bg-gray-900 py-10">
       <h2 className="px-4 text-base font-semibold leading-7 text-white sm:px-6 lg:px-8">Test Runs Report</h2>
@@ -33,12 +38,12 @@ const TestRunsReport = ({ previousRunsData, setSelectedRun }) => {
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-white/5">
+                <tbody className="divide-y divide-white/5">
           {previousRunsData.map((testRun, index) => (
-            <tr key={index} onClick={() => setSelectedRun(testRun)} className="cursor-pointer">
+            <tr key={index} onClick={() => handleClick(testRun)} className="cursor-pointer">
               <td className="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8">
                 <div className="flex items-center gap-x-4">
-                  <div className="truncate text-sm font-medium leading-6 text-white">{testRun.id}</div>
+                  <div className="truncate text-sm font-medium leading-6 text-white hover:underline active:underline">{testRun.id}</div>
                 </div>
               </td>
               <td className="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8">

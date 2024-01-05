@@ -13,7 +13,8 @@ import StatsCard from '../components/StatsCard';
 
 const ViewTestRuns = () => {
   const [allTestData, setAllTestData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState({});
+
   const [selected, setSelected] = useState([]);
   const [runTestsBtnText, setRunTestsBtnText] = useState('Run Tests');
   const [filters, setFilters] = useState({
@@ -22,6 +23,7 @@ const ViewTestRuns = () => {
     status: [],
   });
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [selectedItems, setSelectedItems] = useState([]);
 
   useEffect(() => {
     fetchDataAndSet('today');
@@ -39,18 +41,19 @@ const ViewTestRuns = () => {
   };
 
   
-  const handleSelect = (runId, filePath) => {
-    // Check if the runId is already in the selected array
-    const isSelected = selected.some(item => item.id === runId);
-  
-    if (isSelected) {
-      // If the runId is already selected, remove it from the selected array
-      setSelected(selected.filter(item => item.id !== runId));
-    } else {
-      // If the runId is not selected, add it to the selected array
-      setSelected([...selected, { id: runId, filePath }]);
-    }
-  };
+  const handleSelect = async (id, filePath) => {
+  setIsLoading(prevState => ({ ...prevState, [id]: true }));
+  try {
+    setSelected((prevSelected) => {
+      const isSelected = prevSelected.some(item => item.id === id);
+      return isSelected ? prevSelected.filter((item) => item.id !== id) : [...prevSelected, { id, filePath }];
+    });
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setIsLoading(prevState => ({ ...prevState, [id]: false }));
+  }
+};
 
   useEffect(() => {
     if (runTestsBtnText === 'Running...') {
@@ -161,10 +164,10 @@ const ViewTestRuns = () => {
   ];
 
   return (
-    <div className="bg-gray-900 min-h-screen">
+    <div className="bg-gray-900 min-h-screen container ">
       <FilterSection filters={filters} handleFilterChange={handleFilterChange} />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-xl font-semibold leading-6 text-white mt-6">Yearbook Test Dashboard</h1>
+        <h1 className="text-xl font-semibold leading-6 text-white mt-6 container mx-auto px-4 sm:px-6 lg:px-8">Yearbook Test Dashboard</h1>
         {isLoading ? (
           <div className="grid grid-cols-1 gap-px bg-white/5 sm:grid-cols-2 lg:grid-cols-4">
             {stats.map((stat) => <LoadingCard key={stat.name} name={stat.name} />)}

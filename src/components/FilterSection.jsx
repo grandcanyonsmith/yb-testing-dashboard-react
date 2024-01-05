@@ -1,38 +1,3 @@
-// import React from 'react';
-// import Dropdown from './Dropdown';
-
-// const FilterSection = ({ filters, handleFilterChange }) => {
-//   return (
-//     <div className="hidden sm:block border-b border-gray-700 bg-gray-800 pb-4">
-//       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-//         <div className="flex justify-between space-x-4">
-//           <Dropdown
-//             title="Team"
-//             options={['Legacy', 'Publishing', 'Celebrations']}
-//             selectedOptions={filters.team}
-//             onOptionChange={(e) => handleFilterChange('team', e.target.value, e.target.checked)}
-//           />
-//           <Dropdown
-//             title="Test Type"
-//             options={['UI Tests', 'API Tests']}
-//             selectedOptions={filters.testType}
-//             onOptionChange={(e) => handleFilterChange('testType', e.target.value, e.target.checked)}
-//           />
-//           <Dropdown
-//             title="Status"
-//             options={['Passed', 'Failed', 'Untested']}
-//             selectedOptions={filters.status}
-//             onOptionChange={(e) => handleFilterChange('status', e.target.value, e.target.checked)}
-//           />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default FilterSection;
-
-
 import React, { Fragment, useState } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/solid';
@@ -79,10 +44,10 @@ const FilterSection = ({ handleFilterChange }) => {
   };
 
   return (
-    <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:max-w-7xl lg:px-8 dark:bg-gray-800">
+    <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:max-w-7xl lg:px-8 dark:bg-gray-800 container mx-auto px-4 sm:px-6 lg:px-8">
       <section aria-labelledby="filter-heading" className="border-t border-gray-200 py-6 dark:border-gray-700">
-        <div className="flex items-center justify-between">
-          <Popover.Group className="hidden sm:flex sm:items-baseline sm:space-x-8">
+      <div className="flex items-center justify-end ">
+    <Popover.Group className="hidden sm:flex sm:items-baseline sm:space-x-8">
             {filters.map((section, sectionIdx) => (
               <Popover
                 as="div"
@@ -91,7 +56,7 @@ const FilterSection = ({ handleFilterChange }) => {
                 className="relative inline-block text-left"
               >
                 <div>
-                  <Popover.Button className="group inline-flex items-center justify-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+                <Popover.Button className="group inline-flex items-center justify-center text-sm font-medium text-gray-300 hover:text-white dark:text-gray-200 dark:hover:text-white">
                     <span>{section.name}</span>
                     <ChevronDownIcon
                       className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-400"
@@ -109,8 +74,8 @@ const FilterSection = ({ handleFilterChange }) => {
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <Popover.Panel className="absolute right-0 z-10 mt-2 origin-top-right rounded-md bg-white p-4 shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700 dark:text-gray-300">
-                    <form className="space-y-4">
+                  <Popover.Panel className="absolute right-0 z-10 mt-2 origin-top-right rounded-md bg-gray-800 p-4 shadow-2xl ring-1 dark:text-gray-300 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700 dark:text-gray-300">
+                    <form className="space-y-4 text-white">
                       {section.options.map((option, optionIdx) => (
                         <div key={option.value} className="flex items-center">
                           <input
@@ -123,7 +88,7 @@ const FilterSection = ({ handleFilterChange }) => {
                           />
                           <label
                             htmlFor={`filter-${section.id}-${optionIdx}`}
-                            className="ml-3 whitespace-nowrap pr-6 text-sm font-medium text-gray-900 dark:text-gray-300"
+                            className="ml-3 whitespace-nowrap pr-6 text-sm font-medium text-white dark:text-gray-300"
                           >
                             {option.label}
                           </label>
@@ -137,10 +102,9 @@ const FilterSection = ({ handleFilterChange }) => {
           </Popover.Group>
         </div>
 
-{/* Active filters */}
-<div className="bg-gray-900">
+        <div className="bg-gray-900">
   <div className="mx-auto max-w-7xl px-4 py-3 sm:flex sm:items-center sm:px-6 lg:px-8">
-    <h3 className="text-sm font-medium text-gray-300">
+    <h3 className="hidden sm:block text-sm font-medium text-gray-300">
       Filters
       <span className="sr-only">, active</span>
     </h3>
@@ -171,11 +135,9 @@ const FilterSection = ({ handleFilterChange }) => {
     </div>
   </div>
 </div>
-      </section>
-    </div>
-  );
+</section>
+</div>
+);
 };
 
 export default FilterSection;
-
-
