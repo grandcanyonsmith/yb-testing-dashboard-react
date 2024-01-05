@@ -3,18 +3,19 @@ import { Link } from 'react-router-dom';
 import StatusDot from './StatusDot';
 
 const TestTable = ({ filteredTestData, handleSelectAll, handleSelect, selected }) => {
+
   return (
     <table className="w-full text-left">
       <thead className="border-b border-gray-800 text-sm text-white">
         <tr>
           <th scope="col" className="px-6 py-3">
-            <input
-              type="checkbox"
-              id="select-all"
-              className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-              onChange={handleSelectAll}
-              checked={selected.length === filteredTestData.length && filteredTestData.length > 0}
-            />
+          <input
+  type="checkbox"
+  id="select-all"
+  className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+  onChange={handleSelectAll}
+  checked={selected.length === filteredTestData.length && filteredTestData.length > 0}
+/>
           </th>
           <th scope="col" className="px-6 py-3 text-sm font-semibold" id="test-name-header">
             Test Name
@@ -31,26 +32,26 @@ const TestTable = ({ filteredTestData, handleSelectAll, handleSelect, selected }
         {filteredTestData.map((test) => (
           <tr key={test.runId}>
             <td className="px-6 py-4">
-              <input
-                type="checkbox"
-                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                onChange={() => handleSelect(test.runId, test.filePath)}
-                checked={selected.some(item => item.id === test.runId)}
-              />
+            <input
+  type="checkbox"
+  className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+  onChange={() => handleSelect(test.runId, test.filePath)}
+  checked={selected.some(item => item.id === test.runId)}
+/>
             </td>
             <td className="px-6 py-4 text-sm text-gray-300">
               <Link 
-                to={`/RunDetails?testName=${encodeURIComponent(test.testName.replace(/\s/g, '-'))}`} 
-                className="hover:underline"
-              >
-                {test.formattedTestName}
-              </Link>
+  to={`/RunDetails?testName=${encodeURIComponent(test.testName ? test.testName.replace(/\s/g, '-') : '')}`} 
+  className="hover:underline"
+>
+  {test.formattedTestName}
+</Link>
               <div className="mt-2">
                 <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 mr-2">
                   {test.team}
                 </span>
                 <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
-                  {test.status}
+                  {test.testType}
                 </span>
               </div>
             </td>
@@ -69,6 +70,9 @@ const TestTable = ({ filteredTestData, handleSelectAll, handleSelect, selected }
 };
 
 export default TestTable;
+
+
+
 
 
 // import React, { useCallback, useMemo } from 'react';

@@ -34,15 +34,22 @@ const ViewTestRuns = () => {
   };
 
   const handleSelectAll = (e) => {
-    const ids = filteredTestData.map((item) => item.runId);
+    const ids = filteredTestData.map((item) => ({ id: item.runId, filePath: item.filePath }));
     setSelected(e.target.checked ? ids : []);
   };
 
-  const handleSelect = (id, filePath) => {
-    setSelected((prevSelected) => {
-      const isSelected = prevSelected.some(item => item.id === id);
-      return isSelected ? prevSelected.filter((item) => item.id !== id) : [...prevSelected, { id, filePath }];
-    });
+  
+  const handleSelect = (runId, filePath) => {
+    // Check if the runId is already in the selected array
+    const isSelected = selected.some(item => item.id === runId);
+  
+    if (isSelected) {
+      // If the runId is already selected, remove it from the selected array
+      setSelected(selected.filter(item => item.id !== runId));
+    } else {
+      // If the runId is not selected, add it to the selected array
+      setSelected([...selected, { id: runId, filePath }]);
+    }
   };
 
   useEffect(() => {
@@ -51,10 +58,58 @@ const ViewTestRuns = () => {
     }
   }, [runTestsBtnText, selected]);
 
+
+  const updateTestData = (runId, newData) => {
+    setAllTestData(prevData => {
+      const updatedData = prevData.map(test => {
+        if (test.runId === runId) {
+          return { ...test, ...newData };
+        }
+        return test;
+      });
+      return sortTests(updatedData); // Sort the updated data
+    });
+  };
+
+
+  const sortTests = (tests) => {
+    // Define a mapping from status to a numerical value for sorting
+    const statusPriority = {
+      'Failed': 1,
+      'Passed': 2,
+      'Untested': 3,
+      // Add other statuses if needed
+    };
+  
+    // Sort by status first, then by timestamp (most recent first)
+    return tests.sort((a, b) => {
+      if (statusPriority[a.status] !== statusPriority[b.status]) {
+        return statusPriority[a.status] - statusPriority[b.status];
+      }
+      // Convert timestamps to Date objects for comparison
+      const dateA = new Date(a.timestamp);
+      const dateB = new Date(b.timestamp);
+      return dateB - dateA; // Most recent first
+    });
+  };
+
   const runTests = async () => {
-    const testPromises = selected.map(({ id, filePath }) => axios.post('https://xmichysgq4emm6orafcdnwwhwu0lvmez.lambda-url.us-west-2.on.aws/', { filePath }));
+    const testPromises = selected.map(({ id, filePath }) => 
+      axios.post('https://xmichysgq4emm6orafcdnwwhwu0lvmez.lambda-url.us-west-2.on.aws/', { filePath })
+    );
+  
     try {
-      await Promise.all(testPromises);
+      const responses = await Promise.all(testPromises);
+      responses.forEach((response, index) => {
+        const runId = selected[index].id;
+        // Assuming the response data structure matches the test object structure
+        const testResult = response.data; // This should be the object containing the test result details
+        const newData = {
+          ...testResult, // Spread the test result details into the newData object
+          timeframe: 'A few seconds ago', // Update the timeframe
+        };
+        updateTestData(runId, newData);
+      });
       alert('All tests run successfully.');
       setRunTestsBtnText('Run Tests');
       setSelected([]);

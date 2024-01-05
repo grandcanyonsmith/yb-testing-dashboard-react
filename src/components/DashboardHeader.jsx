@@ -1,17 +1,27 @@
 import React, { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { DotsVerticalIcon } from '@heroicons/react/solid';
+import { useNavigate } from 'react-router-dom';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
 const DashboardHeader = ({ selectedRun, onViewCodeClick }) => {
+  const navigate = useNavigate();
+
   if (!selectedRun) return null;
+
+  const handleBackClick = () => {
+    navigate(-1);
+  };
 
   return (
     <div className="border-b border-gray-700 pb-5 bg-gray-800">
       <div className="sm:flex sm:items-baseline sm:justify-between">
+        <button onClick={handleBackClick} className="mr-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Back
+        </button>
         <div className="sm:w-0 sm:flex-1">
           <h1 id="message-heading" className="text-base font-semibold leading-6 text-white">
             {selectedRun.formattedTestName}

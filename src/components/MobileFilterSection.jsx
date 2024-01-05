@@ -76,7 +76,7 @@ export default function MobileFilterSection() {
                 <h2 className="text-lg font-medium text-white">Filters</h2>
                 <button
                   type="button"
-                  className="-mr-2 w-10 h-10 flex items-center justify-center rounded-md bg-gray-900 p-2 text-white-50 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="-mr-2 w-10 h-10 flex items-center justify-center rounded-md bg-black p-2 text-white-50 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   onClick={() => setOpen(false)}
                 >
                   <span className="sr-only">Close menu</span>

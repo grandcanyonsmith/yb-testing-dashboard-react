@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronRightIcon } from '@heroicons/react/solid';
+import { RefreshIcon } from '@heroicons/react/solid';
 import { Transition } from '@headlessui/react';
 
 const LoadingOverlay = ({ loading }) => {
@@ -14,7 +14,7 @@ const LoadingOverlay = ({ loading }) => {
       leaveTo="opacity-0"
     >
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-        <ChevronRightIcon className="animate-spin h-32 w-32 text-white" />
+        <RefreshIcon className="animate-spin h-32 w-32 text-white" />
       </div>
     </Transition>
   );
