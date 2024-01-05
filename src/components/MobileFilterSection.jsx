@@ -1,6 +1,7 @@
 import { Fragment, useState } from 'react'
 import { Dialog, Disclosure, Transition } from '@headlessui/react'
 import { XIcon, ChevronDownIcon } from '@heroicons/react/solid'
+import { PlayIcon } from '@heroicons/react/solid';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')

@@ -13,8 +13,7 @@ import StatsCard from '../components/StatsCard';
 
 const ViewTestRuns = () => {
   const [allTestData, setAllTestData] = useState([]);
-  const [isLoading, setIsLoading] = useState({});
-
+  const [isLoading, setIsLoading] = useState(true);
   const [selected, setSelected] = useState([]);
   const [runTestsBtnText, setRunTestsBtnText] = useState('Run Tests');
   const [filters, setFilters] = useState({
@@ -23,7 +22,6 @@ const ViewTestRuns = () => {
     status: [],
   });
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
-  const [selectedItems, setSelectedItems] = useState([]);
 
   useEffect(() => {
     fetchDataAndSet('today');
@@ -41,19 +39,18 @@ const ViewTestRuns = () => {
   };
 
   
-  const handleSelect = async (id, filePath) => {
-  setIsLoading(prevState => ({ ...prevState, [id]: true }));
-  try {
-    setSelected((prevSelected) => {
-      const isSelected = prevSelected.some(item => item.id === id);
-      return isSelected ? prevSelected.filter((item) => item.id !== id) : [...prevSelected, { id, filePath }];
-    });
-  } catch (error) {
-    console.error(error);
-  } finally {
-    setIsLoading(prevState => ({ ...prevState, [id]: false }));
-  }
-};
+  const handleSelect = (runId, filePath) => {
+    // Check if the runId is already in the selected array
+    const isSelected = selected.some(item => item.id === runId);
+  
+    if (isSelected) {
+      // If the runId is already selected, remove it from the selected array
+      setSelected(selected.filter(item => item.id !== runId));
+    } else {
+      // If the runId is not selected, add it to the selected array
+      setSelected([...selected, { id: runId, filePath }]);
+    }
+  };
 
   useEffect(() => {
     if (runTestsBtnText === 'Running...') {
