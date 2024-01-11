@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Listbox, Transition } from '@headlessui/react';
 import { PaperClipIcon, XIcon, ExclamationCircleIcon } from '@heroicons/react/solid';
 import { Spinner, Tooltip, useToast } from '@chakra-ui/react';
-
+import PullRequestButton from './PullRequestButton'
 const LOADING_STATES = {
   idle: 'idle',
   submit: 'submit',
@@ -17,6 +17,7 @@ const Button = ({ onClick, loadingState, children, buttonState, tooltip }) => (
       className={`inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${loadingState === buttonState ? 'opacity-50 cursor-not-allowed' : ''}`} 
       disabled={loadingState === buttonState}
       aria-label={buttonState}
+      style={{ width: '100px', height: '40px' }} // Add this line
     >
       {loadingState === buttonState ? <Spinner size="xs" /> : children}
     </button>

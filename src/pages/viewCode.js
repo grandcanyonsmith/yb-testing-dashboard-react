@@ -14,6 +14,7 @@ import CodeContainer from '../components/CodeContainer';
 import LogContainer from '../components/LogContainer';
 import InputContainer from '../components/InputContainer';
 import ErrorDisplay from '../components/ErrorDisplay';
+import PullRequestButton from '../components/PullRequestButton'
 
 const API_URLS = {
   submit: 'https://kvqpfgxn2jz5pyh4wz7thbmhay0hqcvh.lambda-url.us-west-2.on.aws/',
@@ -156,22 +157,29 @@ const ViewCode = () => {
     navigate(`/RunDetails?testName=${encodeURIComponent(testName)}`);
   };
 
-  return (
-    <div className="ViewCode">
-      <BackButton onClick={navigateBack} />
-      <TabContainer activeTab={state.viewCode ? 'Code' : 'Logs'} onTabChange={toggleViewCode} tabs={['Code', 'Logs']} />
-      <CodeContainer code={state.code} language="python" hidden={!state.viewCode} />
-      <LogContainer stdout={state.output.stdout} stderr={state.output.stderr} hidden={state.viewCode} />
-      <InputContainer
-        requestText={state.userRequest}
-        handleRequestChange={handleRequestChange}
-        handleSubmit={handleSubmit}
-        handleExecute={handleExecute}
-        currentLoadingState={state.loadingState}
-      />
-      {state.error && <ErrorDisplay error={state.error} />}
-    </div>
-  );
+  const handlePullRequest = () => {
+  console.log(state.code);
 };
 
+return (
+  <div className="ViewCode">
+    <BackButton onClick={navigateBack} />
+    <TabContainer activeTab={state.viewCode ? 'Code' : 'Logs'} onTabChange={toggleViewCode} tabs={['Code', 'Logs']} />
+    <CodeContainer code={state.code} language="python" hidden={!state.viewCode} />
+    <LogContainer stdout={state.output.stdout} stderr={state.output.stderr} hidden={state.viewCode} />
+    <PullRequestButton
+        code={state.code}
+        testName={state.testName}
+        // Pass any other required props
+      />
+    <InputContainer      requestText={state.userRequest}
+      handleRequestChange={handleRequestChange}
+      handleSubmit={handleSubmit}
+      handleExecute={handleExecute}
+      currentLoadingState={state.loadingState}
+    />
+    {state.error && <ErrorDisplay error={state.error} />}
+  </div>
+);
+};
 export default ViewCode;

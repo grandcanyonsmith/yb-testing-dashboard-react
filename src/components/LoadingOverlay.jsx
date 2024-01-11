@@ -13,7 +13,7 @@ const LoadingOverlay = ({ loading }) => {
       leaveFrom="opacity-100"
       leaveTo="opacity-0"
     >
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+      <div className="fixed inset-0 bg-black flex items-center justify-center">
         <RefreshIcon className="animate-spin h-32 w-32 text-white" />
       </div>
     </Transition>
