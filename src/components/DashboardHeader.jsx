@@ -13,7 +13,7 @@ const DashboardHeader = ({ selectedRun, onViewCodeClick }) => {
   if (!selectedRun) return null;
 
   const handleBackClick = () => {
-    navigate(-1);
+    navigate('/');
   };
 
   return (

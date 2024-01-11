@@ -164,6 +164,9 @@ const ViewTestRuns = () => {
     <div className="bg-gray-900 min-h-screen container ">
       <FilterSection filters={filters} handleFilterChange={handleFilterChange} />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">
+          <a href="https://heimdall-set.alamoappi.octanner.io/home" target="_blank" rel="noopener noreferrer">Go to Heimdall</a>
+        </button>
         <h1 className="text-xl font-semibold leading-6 text-white mt-6 container mx-auto px-4 sm:px-6 lg:px-8">Yearbook Test Dashboard</h1>
         {isLoading ? (
           <div className="grid grid-cols-1 gap-px bg-white/5 sm:grid-cols-2 lg:grid-cols-4">
