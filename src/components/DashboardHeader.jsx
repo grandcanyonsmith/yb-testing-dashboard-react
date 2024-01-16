@@ -26,69 +26,70 @@ const DashboardHeader = ({ selectedRun, onViewCodeClick }) => {
           Back
         </button>
         <div className="sm:w-0 sm:flex-1">
-          <h1
-            id="message-heading"
-            className="text-base font-semibold leading-6 text-white"
-          >
-            {selectedRun.formattedTestName}
-          </h1>
-          <p className="mt-1 truncate text-sm text-gray-400">
-            ID: {selectedRun.id}
-          </p>
-        </div>
-
-        <div className="mt-4 flex flex-col sm:flex-row items-center justify-between sm:ml-6 sm:mt-0 sm:flex-shrink-0 sm:justify-start">
-          <span className="inline-flex items-center rounded-full bg-blue-900 px-2 py-1 text-xs font-medium text-blue-200 ring-1 ring-inset ring-blue-600/20 mb-2 sm:mb-0 sm:mr-2">
-            {selectedRun.team}
-          </span>
-          {selectedRun.status === "Passed" && (
-            <span className="inline-flex items-center rounded-full bg-green-700 px-2 py-1 text-xs font-medium text-green-200 ring-1 ring-inset ring-green-600/20 mb-2 sm:mb-0 sm:mr-2">
-              Passed
-            </span>
-          )}
-          {selectedRun.status === "Failed" && (
-            <span className="inline-flex items-center rounded-full bg-red-700 px-2 py-1 text-xs font-medium text-red-200 ring-1 ring-inset ring-red-600/20 mb-2 sm:mb-0 sm:mr-2">
-              Failed
-            </span>
-          )}
-          <Menu as="div" className="relative inline-block text-left">
-            <div>
-              <Menu.Button className="-my-2 flex items-center rounded-full bg-gray-700 p-2 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <span className="sr-only">Open options</span>
-                <DotsVerticalIcon className="h-5 w-5" aria-hidden="true" />
-              </Menu.Button>
-            </div>
-
-            <Transition
-              as={Fragment}
-              enter="transition ease-out duration-100"
-              enterFrom="transform opacity-0 scale-95"
-              enterTo="transform opacity-100 scale-100"
-              leave="transition ease-in duration-75"
-              leaveFrom="transform opacity-100 scale-100"
-              leaveTo="transform opacity-0 scale-95"
+          <div className="flex justify-between items-center">
+            <h1
+              id="message-heading"
+              className="text-base font-semibold leading-6 text-white"
             >
-              <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-gray-700 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                <div className="py-1">
-                  <Menu.Item>
-                    {({ active }) => (
-                      <div
-                        onClick={onViewCodeClick}
-                        className={classNames(
-                          active
-                            ? "bg-gray-600 text-gray-200"
-                            : "text-gray-400",
-                          "flex justify-between px-4 py-2 text-sm cursor-pointer",
-                        )}
-                      >
-                        <span>View Code</span>
-                      </div>
-                    )}
-                  </Menu.Item>
-                </div>
-              </Menu.Items>
-            </Transition>
-          </Menu>
+              {selectedRun.formattedTestName}
+            </h1>
+            <Menu as="div" className="relative inline-block text-left">
+              <div>
+                <Menu.Button className="-my-2 flex items-center rounded-full bg-gray-700 p-2 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  <span className="sr-only">Open options</span>
+                  <DotsVerticalIcon className="h-5 w-5" aria-hidden="true" />
+                </Menu.Button>
+              </div>
+
+              <Transition
+                as={Fragment}
+                enter="transition ease-out duration-100"
+                enterFrom="transform opacity-0 scale-95"
+                enterTo="transform opacity-100 scale-100"
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100"
+                leaveTo="transform opacity-0 scale-95"
+              >
+                <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-gray-700 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <div className="py-1">
+                    <Menu.Item>
+                      {({ active }) => (
+                        <div
+                          onClick={onViewCodeClick}
+                          className={classNames(
+                            active
+                              ? "bg-gray-600 text-gray-200"
+                              : "text-gray-400",
+                            "flex justify-between px-4 py-2 text-sm cursor-pointer",
+                          )}
+                        >
+                          <span>View Code</span>
+                        </div>
+                      )}
+                    </Menu.Item>
+                  </div>
+                </Menu.Items>
+              </Transition>
+            </Menu>
+          </div>
+          <div className="flex items-center mt-1">
+            <p className="truncate text-sm text-gray-400 mr-2">
+              ID: {selectedRun.id}
+            </p>
+            <span className="inline-flex items-center rounded-full bg-blue-900 px-2 py-1 text-xs font-medium text-blue-200 ring-1 ring-inset ring-blue-600/20 mb-2 sm:mb-0 sm:mr-2">
+              {selectedRun.team}
+            </span>
+            {selectedRun.status === "Passed" && (
+              <span className="inline-flex items-center rounded-full bg-green-700 px-2 py-1 text-xs font-medium text-green-200 ring-1 ring-inset ring-green-600/20 mb-2 sm:mb-0 sm:mr-2">
+                Passed
+              </span>
+            )}
+            {selectedRun.status === "Failed" && (
+              <span className="inline-flex items-center rounded-full bg-red-700 px-2 py-1 text-xs font-medium text-red-200 ring-1 ring-inset ring-red-600/20 mb-2 sm:mb-0 sm:mr-2">
+                Failed
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -96,3 +97,4 @@ const DashboardHeader = ({ selectedRun, onViewCodeClick }) => {
 };
 
 export default DashboardHeader;
+

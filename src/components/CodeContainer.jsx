@@ -16,7 +16,7 @@ const CodeContainer = ({ code, language, hidden = false }) => {
 
   return (
     <div className={containerClass}>
-      <pre className="line-numbers">
+      <pre className="line-numbers" style={{ minHeight: '100vh' }}>
         <code className={codeClass}>{code}</code>
       </pre>
     </div>
