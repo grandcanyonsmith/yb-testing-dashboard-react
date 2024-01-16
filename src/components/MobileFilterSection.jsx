@@ -1,43 +1,43 @@
-import { Fragment, useState } from 'react'
-import { Dialog, Disclosure, Transition } from '@headlessui/react'
-import { XIcon, ChevronDownIcon } from '@heroicons/react/solid'
-import { PlayIcon } from '@heroicons/react/solid';
+import { Fragment, useState } from "react";
+import { Dialog, Disclosure, Transition } from "@headlessui/react";
+import { XIcon, ChevronDownIcon } from "@heroicons/react/solid";
+import { PlayIcon } from "@heroicons/react/solid";
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
-export default function MobileFilterSection({ handleFilterChange, }) {
+export default function MobileFilterSection({ handleFilterChange }) {
   const [open, setOpen] = useState(false);
   const filters = [
     {
-      id: 'team',
-      name: 'Team',
+      id: "team",
+      name: "Team",
       options: [
-        { value: 'Legacy', label: 'Legacy', checked: false },
-        { value: 'Publishing', label: 'Publishing', checked: false },
-        { value: 'Celebrations', label: 'Celebrations', checked: false },
+        { value: "Legacy", label: "Legacy", checked: false },
+        { value: "Publishing", label: "Publishing", checked: false },
+        { value: "Celebrations", label: "Celebrations", checked: false },
       ],
     },
     {
-      id: 'status',
-      name: 'Status',
+      id: "status",
+      name: "Status",
       options: [
-        { value: 'Passed', label: 'Passed', checked: false },
-        { value: 'Failed', label: 'Failed', checked: false },
-        { value: 'Untested', label: 'Untested', checked: false },
+        { value: "Passed", label: "Passed", checked: false },
+        { value: "Failed", label: "Failed", checked: false },
+        { value: "Untested", label: "Untested", checked: false },
       ],
     },
     {
-      id: 'testType',
-      name: 'Test Type',
+      id: "testType",
+      name: "Test Type",
       options: [
-        { value: 'UI Tests', label: 'UI Tests', checked: false },
-        { value: 'API Tests', label: 'API Tests', checked: false },
+        { value: "UI Tests", label: "UI Tests", checked: false },
+        { value: "API Tests", label: "API Tests", checked: false },
       ],
     },
   ];
-  
+
   // Use the filters array directly in your component
   return (
     <div className="bg-gray-900 container mx-auto px-4 sm:px-6 lg:px-8">
@@ -50,7 +50,11 @@ export default function MobileFilterSection({ handleFilterChange, }) {
       </button>
 
       <Transition.Root show={open} as={Fragment}>
-        <Dialog as="div" className="fixed inset-0 z-40 flex sm:hidden" onClose={setOpen}>
+        <Dialog
+          as="div"
+          className="fixed inset-0 z-40 flex sm:hidden"
+          onClose={setOpen}
+        >
           <Transition.Child
             as={Fragment}
             enter="transition-opacity ease-linear duration-300"
@@ -86,44 +90,62 @@ export default function MobileFilterSection({ handleFilterChange, }) {
               </div>
 
               <form className="mt-4 px-4 space-y-6">
-        {filters.map((section) => (
-          <Disclosure as="div" key={section.id} className="border-t border-gray-200 py-6">
-            {({ open }) => (
-              <>
-                <h3 className="-mx-2 -my-3 flow-root">
-                  <Disclosure.Button className="px-2 py-3 w-full flex items-center justify-between text-sm text-white-50 bg-gray-900">
-                    <span className="font-medium text-white">{section.name}</span>
-                    <ChevronDownIcon
-                      className={classNames(open ? '-rotate-180' : 'rotate-0', 'ml-6 h-5 w-5 transform')}
-                      aria-hidden="true"
-                    />
-                  </Disclosure.Button>
-                </h3>
-                <Disclosure.Panel className="space-y-6">
-                  {section.options.map((option, optionIdx) => (
-                    <div key={option.value} className="flex items-center">
-                      <input
-                        id={`filter-mobile-${section.id}-${optionIdx}`}
-                        name={`${section.id}[]`}
-                        value={option.value}
-                        type="checkbox"
-                        className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-                        onChange={(e) => handleFilterChange(section.id, option.value, e.target.checked)}
-                      />
-                      <label
-                        htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
-                        className="ml-3 text-sm text-gray-500"
-                      >
-                        {option.label}
-                      </label>
-                    </div>
-                  ))}
-                </Disclosure.Panel>
-              </>
-            )}
-          </Disclosure>
-        ))}
-      </form>
+                {filters.map((section) => (
+                  <Disclosure
+                    as="div"
+                    key={section.id}
+                    className="border-t border-gray-200 py-6"
+                  >
+                    {({ open }) => (
+                      <>
+                        <h3 className="-mx-2 -my-3 flow-root">
+                          <Disclosure.Button className="px-2 py-3 w-full flex items-center justify-between text-sm text-white-50 bg-gray-900">
+                            <span className="font-medium text-white">
+                              {section.name}
+                            </span>
+                            <ChevronDownIcon
+                              className={classNames(
+                                open ? "-rotate-180" : "rotate-0",
+                                "ml-6 h-5 w-5 transform",
+                              )}
+                              aria-hidden="true"
+                            />
+                          </Disclosure.Button>
+                        </h3>
+                        <Disclosure.Panel className="space-y-6">
+                          {section.options.map((option, optionIdx) => (
+                            <div
+                              key={option.value}
+                              className="flex items-center"
+                            >
+                              <input
+                                id={`filter-mobile-${section.id}-${optionIdx}`}
+                                name={`${section.id}[]`}
+                                value={option.value}
+                                type="checkbox"
+                                className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                onChange={(e) =>
+                                  handleFilterChange(
+                                    section.id,
+                                    option.value,
+                                    e.target.checked,
+                                  )
+                                }
+                              />
+                              <label
+                                htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
+                                className="ml-3 text-sm text-gray-500"
+                              >
+                                {option.label}
+                              </label>
+                            </div>
+                          ))}
+                        </Disclosure.Panel>
+                      </>
+                    )}
+                  </Disclosure>
+                ))}
+              </form>
             </Dialog.Panel>
           </Transition.Child>
         </Dialog>
@@ -131,7 +153,3 @@ export default function MobileFilterSection({ handleFilterChange, }) {
     </div>
   );
 }
-
-
-
-

@@ -14,7 +14,6 @@ import CodeContainer from '../components/CodeContainer';
 import LogContainer from '../components/LogContainer';
 import InputContainer from '../components/InputContainer';
 import ErrorDisplay from '../components/ErrorDisplay';
-import PullRequestButton from '../components/PullRequestButton'
 
 const API_URLS = {
   submit: 'https://kvqpfgxn2jz5pyh4wz7thbmhay0hqcvh.lambda-url.us-west-2.on.aws/',
@@ -162,22 +161,19 @@ const ViewCode = () => {
 };
 
 return (
-  <div className="ViewCode">
+  <div className="ViewCode mx-auto max-w-7xl sm:px-6 lg:px-8">
     <BackButton onClick={navigateBack} />
     <TabContainer activeTab={state.viewCode ? 'Code' : 'Logs'} onTabChange={toggleViewCode} tabs={['Code', 'Logs']} />
     <CodeContainer code={state.code} language="python" hidden={!state.viewCode} />
     <LogContainer stdout={state.output.stdout} stderr={state.output.stderr} hidden={state.viewCode} />
-    <PullRequestButton
-        code={state.code}
-        testName={state.testName}
-        // Pass any other required props
-      />
-    <InputContainer      requestText={state.userRequest}
-      handleRequestChange={handleRequestChange}
-      handleSubmit={handleSubmit}
-      handleExecute={handleExecute}
-      currentLoadingState={state.loadingState}
-    />
+    <InputContainer
+  state={state}
+  requestText={state.userRequest}
+  handleRequestChange={handleRequestChange}
+  handleSubmit={handleSubmit}
+  handleExecute={handleExecute}
+  currentLoadingState={state.loadingState}
+/>
     {state.error && <ErrorDisplay error={state.error} />}
   </div>
 );

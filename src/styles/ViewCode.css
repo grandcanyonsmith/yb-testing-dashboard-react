@@ -1,5 +1,5 @@
 .ViewCode {
-    background-color: #1a202c;
+  
     color: white;
     min-height: 100vh;
     display: flex;
@@ -49,8 +49,7 @@
   .logContainer {
     flex-grow: 1;
     overflow: auto;
-    margin-bottom: 4rem;
-    background-color: #1a202c;
+    /* margin-bottom: 4rem; */
   }
   
   .inputContainer {

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Listbox, Transition } from '@headlessui/react';
 import { PaperClipIcon, XIcon, ExclamationCircleIcon } from '@heroicons/react/solid';
 import { Spinner, Tooltip, useToast } from '@chakra-ui/react';
 import PullRequestButton from './PullRequestButton'
+
 const LOADING_STATES = {
   idle: 'idle',
   submit: 'submit',
@@ -32,10 +33,11 @@ Button.propTypes = {
   tooltip: PropTypes.string.isRequired,
 };
 
-const InputContainer = ({ requestText, handleRequestChange, handleSubmit, handleExecute, currentLoadingState, errorMessage }) => {
+const InputContainer = ({ state, requestText, handleRequestChange, handleSubmit, handleExecute, currentLoadingState, errorMessage }) => {
+
   const toast = useToast();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (errorMessage) {
       toast({
         title: "Error",
@@ -69,15 +71,11 @@ const InputContainer = ({ requestText, handleRequestChange, handleSubmit, handle
           <div className="absolute inset-x-0 bottom-0 flex justify-between py-2 pl-3 pr-2">
             <div className="flex items-center space-x-5">
               <div className="flex items-center">
-                {/* <Tooltip label="Attach a file">
-                  <button
-                    type="button"
-                    className="-m-2.5 flex h-10 w-10 items-center justify-center rounded-full text-gray-400 hover:text-gray-500"
-                    aria-label="Attach a file"
-                  >
-                    <PaperClipIcon className="h-5 w-5" aria-hidden="true" />
-                  </button>
-                </Tooltip> */}
+              <PullRequestButton
+        code={state.code}
+        testName={state.testName}
+        // Pass any other required props
+      />
               </div>
             </div>
             <div className="flex-shrink-0 space-x-2">
@@ -96,6 +94,7 @@ const InputContainer = ({ requestText, handleRequestChange, handleSubmit, handle
 };
 
 InputContainer.propTypes = {
+  state: PropTypes.object.isRequired,
   requestText: PropTypes.string.isRequired,
   handleRequestChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
