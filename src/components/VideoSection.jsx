@@ -5,7 +5,7 @@ const VideoSection = ({ selectedRun }) => {
 
   return (
     <section className="w-full h-1/2 flex items-center justify-center bg-gray-800 relative">
-      <video src={selectedRun.videoUrl} controls className="w-full h-full"></video>
+      <video src={selectedRun.videoUrl} controls autoPlay className="w-full h-full rounded"></video>
     </section>
   );
 };

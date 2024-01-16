@@ -48,8 +48,8 @@ function reducer(state, action) {
       return { ...state, testName: action.payload };
     case 'setOutput':
       return { ...state, output: action.payload };
-    case 'toggleViewCode':
-      return { ...state, viewCode: !state.viewCode };
+      case 'toggleViewCode':
+        return { ...state, viewCode: action.payload };
     case 'setLoadingState':
       return { ...state, loadingState: action.payload };
     case 'setError':
@@ -139,7 +139,7 @@ const ViewCode = () => {
       const data = await handleApiRequest(API_URLS.execute, requestBody);
       console.log('Received response:', data); // Log the response data
       dispatch({ type: 'setOutput', payload: { stdout: data.StandardOutputContent, stderr: data.StandardErrorContent } });
-      dispatch({ type: 'toggleViewCode' });
+      dispatch({ type: 'toggleViewCode', payload: false }); // Change the active tab to 'Logs'
     } catch (error) {
       dispatch({ type: 'setError', payload: error });
     } finally {
@@ -163,7 +163,11 @@ const ViewCode = () => {
 return (
   <div className="ViewCode mx-auto max-w-7xl sm:px-6 lg:px-8">
     <BackButton onClick={navigateBack} />
-    <TabContainer activeTab={state.viewCode ? 'Code' : 'Logs'} onTabChange={toggleViewCode} tabs={['Code', 'Logs']} />
+    <TabContainer 
+  activeTab={state.viewCode ? 'Code' : 'Logs'} 
+  onTabChange={(index) => dispatch({ type: 'toggleViewCode', payload: index === 0 })} 
+  tabs={['Code', 'Logs']} 
+/>
     <CodeContainer code={state.code} language="python" hidden={!state.viewCode} />
     <LogContainer stdout={state.output.stdout} stderr={state.output.stderr} hidden={state.viewCode} />
     <InputContainer
