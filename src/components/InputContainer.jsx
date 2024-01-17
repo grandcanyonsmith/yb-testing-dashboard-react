@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Listbox, Transition } from '@headlessui/react';
 import { PaperClipIcon, XIcon, ExclamationCircleIcon } from '@heroicons/react/solid';
@@ -33,9 +33,35 @@ Button.propTypes = {
   tooltip: PropTypes.string.isRequired,
 };
 
+const useKeydown = (key, callback) => {
+  useEffect(() => {
+    const handler = (event) => {
+      if (event.key === key) {
+        callback(event);
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => {
+      window.removeEventListener('keydown', handler);
+    };
+  }, [callback, key]);
+};
+
 const InputContainer = ({ state, requestText, handleRequestChange, handleSubmit, handleExecute, currentLoadingState, errorMessage }) => {
 
   const toast = useToast();
+
+  const handleEnter = useCallback((event) => {
+    if (event.metaKey) {
+      if (event.shiftKey) {
+        handleExecute(event);
+      } else {
+        handleSubmit(event);
+      }
+    }
+  }, [handleExecute, handleSubmit]);
+
+  useKeydown('Enter', handleEnter);
 
   useEffect(() => {
     if (errorMessage) {
