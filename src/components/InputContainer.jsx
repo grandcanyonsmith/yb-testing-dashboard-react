@@ -9,6 +9,7 @@ const LOADING_STATES = {
   idle: 'idle',
   submit: 'submit',
   execute: 'execute',
+  fetchFileContents: 'fetchFileContents', // Add this line
 };
 
 const Button = ({ onClick, loadingState, children, buttonState, tooltip }) => (
@@ -120,6 +121,7 @@ const InputContainer = ({ state, requestText, handleRequestChange, handleSubmit,
 };
 
 InputContainer.propTypes = {
+  currentLoadingState: PropTypes.oneOf(Object.values(LOADING_STATES)), // This will now include 'fetchFileContents'
   state: PropTypes.object.isRequired,
   requestText: PropTypes.string.isRequired,
   handleRequestChange: PropTypes.func.isRequired,

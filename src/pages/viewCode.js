@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Prism from 'prismjs';
@@ -14,6 +14,9 @@ import CodeContainer from '../components/CodeContainer';
 import LogContainer from '../components/LogContainer';
 import InputContainer from '../components/InputContainer';
 import ErrorDisplay from '../components/ErrorDisplay';
+import SidebarMenu from '../components/SidebarMenu';
+import { useMediaQuery } from 'react-responsive';
+
 
 const API_URLS = {
   submit: 'https://kvqpfgxn2jz5pyh4wz7thbmhay0hqcvh.lambda-url.us-west-2.on.aws/',
@@ -70,8 +73,11 @@ async function handleApiRequest(url, body) {
 
 const ViewCode = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const isDesktopOrLaptop = useMediaQuery({ query: '(min-width: 1024px)' });
+  const [isSidebarOpen, setSidebarOpen] = useState(isDesktopOrLaptop);
   const navigate = useNavigate();
   const location = useLocation();
+
 
   // Use the state and dispatch to create handler functions
   const handleRequestChange = (e) => {
@@ -160,9 +166,16 @@ const ViewCode = () => {
   console.log(state.code);
 };
 
+const toggleSidebar = () => {
+  setSidebarOpen(!isSidebarOpen);
+};
+
 return (
   <div className="ViewCode mx-auto max-w-7xl sm:px-6 lg:px-8">
-    <BackButton onClick={navigateBack} />
+  <button onClick={toggleSidebar} className="md:hidden">
+      <img src="path_to_your_icon" alt="Menu Icon" />
+    </button>
+    <SidebarMenu isOpen={isSidebarOpen} setIsOpen={setSidebarOpen} />
     <TabContainer 
   activeTab={state.viewCode ? 'Code' : 'Logs'} 
   onTabChange={(index) => dispatch({ type: 'toggleViewCode', payload: index === 0 })} 
@@ -183,3 +196,7 @@ return (
 );
 };
 export default ViewCode;
+
+
+
+
