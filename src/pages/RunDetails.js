@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ChevronRightIcon } from '@heroicons/react/solid';
 import { Transition } from '@headlessui/react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation} from 'react-router-dom';
 import DashboardHeader from '../components/DashboardHeader';
 import VideoSection from '../components/VideoSection';
 import LogsSection from '../components/LogsSection';
 import TestRunsReport from '../components/TestRunsReport';
 import LoadingOverlay from '../components/LoadingOverlay';
 import ErrorOverlay from '../components/ErrorOverlay';
+import SidebarMenu from '../components/SidebarMenu';
+import { useMediaQuery } from 'react-responsive';
 
 const fetchRunData = async (testName) => {
   const url = "https://m3safcz3boalyw7x7dl4qig3wq0tucft.lambda-url.us-west-2.on.aws/";
@@ -30,6 +32,12 @@ const TestDashboard = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const isDesktopOrLaptop = useMediaQuery({ query: '(min-width: 1024px)' });
+  const [isSidebarOpen, setSidebarOpen] = useState(isDesktopOrLaptop);
+  useEffect(() => {
+    setSidebarOpen(isDesktopOrLaptop);
+  }, [isDesktopOrLaptop]);
 
   useEffect(() => {
     const initiateFetch = async () => {
@@ -52,7 +60,8 @@ const TestDashboard = () => {
   };
 
   return (
-    <div className="mx-auto max-w-7xl sm:px-6 lg:px-8 bg-gray-900 text-gray-200">
+    <div className="mx-auto max-w-7xl sm:px-6 lg:px-8 bg-gray-00 text-gray-200">
+    <SidebarMenu isOpen={isSidebarOpen} setIsOpen={setSidebarOpen} />
       <DashboardHeader selectedRun={selectedRun} onViewCodeClick={handleViewCodeClick} />
       <main className="mt-4 px-4 sm:px-0">
         <VideoSection selectedRun={selectedRun} />

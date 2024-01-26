@@ -47,7 +47,7 @@ const TestTable = ({ filteredTestData, handleSelectAll, handleSelect, selected }
           </th>
         </tr>
       </thead>
-      <tbody className="divide-y divide-gray-800 bg-gray-900">
+      <tbody className="divide-y divide-gray-700 bg-gray-800">
         {filteredTestData.map((test) => (
           <tr key={test.runId}>
             <td className="px-6 py-4">

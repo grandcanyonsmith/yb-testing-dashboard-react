@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import PropTypes from 'prop-types';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism-okaidia.css';

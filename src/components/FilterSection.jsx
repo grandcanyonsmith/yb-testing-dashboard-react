@@ -45,7 +45,7 @@ const FilterSection = ({ handleFilterChange }) => {
 
   return (
     <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:max-w-7xl lg:px-8 dark:bg-gray-800 container mx-auto px-4 sm:px-6 lg:px-8">
-      <section aria-labelledby="filter-heading" className="border-t border-gray-200 py-6 dark:border-gray-700">
+      <section aria-labelledby="filter-heading" className="border-t border-gray-600 py-6 dark:border-gray-700">
       <div className="flex items-center justify-end ">
     <Popover.Group className="hidden sm:flex sm:items-baseline sm:space-x-8">
             {filters.map((section, sectionIdx) => (
@@ -102,7 +102,7 @@ const FilterSection = ({ handleFilterChange }) => {
           </Popover.Group>
         </div>
 
-        <div className="hidden bg-gray-900">
+        <div className="hidden bg-gray-800">
   <div className="hidden mx-auto max-w-7xl px-4 py-3 sm:flex sm:items-center sm:px-6 lg:px-8">
     <h3 className="sm:block text-sm font-medium text-gray-300">
       Filters

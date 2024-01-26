@@ -40,7 +40,7 @@ export default function MobileFilterSection({ handleFilterChange }) {
 
   // Use the filters array directly in your component
   return (
-    <div className="bg-gray-900 container mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="bg-gray-800 container mx-auto px-4 sm:px-6 lg:px-8">
       <button
         type="button"
         className="px-4 py-2 text-white bg-indigo-600 rounded mt-4 sm:hidden"
@@ -76,7 +76,7 @@ export default function MobileFilterSection({ handleFilterChange }) {
             leaveFrom="translate-x-0"
             leaveTo="translate-x-full"
           >
-            <Dialog.Panel className="relative w-full max-w-xs h-full ml-auto flex flex-col overflow-y-auto bg-gray-900 py-4 pb-6 shadow-xl text-white">
+            <Dialog.Panel className="relative w-full max-w-xs h-full ml-auto flex flex-col overflow-y-auto bg-gray-800 py-4 pb-6 shadow-xl text-white">
               <div className="px-4 flex items-center justify-between">
                 <h2 className="text-lg font-medium text-white">Filters</h2>
                 <button
@@ -99,7 +99,7 @@ export default function MobileFilterSection({ handleFilterChange }) {
                     {({ open }) => (
                       <>
                         <h3 className="-mx-2 -my-3 flow-root">
-                          <Disclosure.Button className="px-2 py-3 w-full flex items-center justify-between text-sm text-white-50 bg-gray-900">
+                          <Disclosure.Button className="px-2 py-3 w-full flex items-center justify-between text-sm text-white-50 bg-gray-800">
                             <span className="font-medium text-white">
                               {section.name}
                             </span>

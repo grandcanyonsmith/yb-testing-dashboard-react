@@ -73,10 +73,14 @@ async function handleApiRequest(url, body) {
 
 const ViewCode = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const isDesktopOrLaptop = useMediaQuery({ query: '(min-width: 1024px)' });
-  const [isSidebarOpen, setSidebarOpen] = useState(isDesktopOrLaptop);
+
   const navigate = useNavigate();
   const location = useLocation();
+  const isDesktopOrLaptop = useMediaQuery({ query: '(min-width: 1024px)' });
+  const [isSidebarOpen, setSidebarOpen] = useState(isDesktopOrLaptop);
+  useEffect(() => {
+    setSidebarOpen(isDesktopOrLaptop);
+  }, [isDesktopOrLaptop]);
 
 
   // Use the state and dispatch to create handler functions
@@ -172,9 +176,6 @@ const toggleSidebar = () => {
 
 return (
   <div className="ViewCode mx-auto max-w-7xl sm:px-6 lg:px-8">
-  <button onClick={toggleSidebar} className="md:hidden">
-      <img src="path_to_your_icon" alt="Menu Icon" />
-    </button>
     <SidebarMenu isOpen={isSidebarOpen} setIsOpen={setSidebarOpen} />
     <TabContainer 
   activeTab={state.viewCode ? 'Code' : 'Logs'} 

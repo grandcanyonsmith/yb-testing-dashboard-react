@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { fetchData, applyFilters } from '../view-test-runs-main';
@@ -10,12 +10,26 @@ import TestTable from '../components/TestTable';
 import RunTestsButton from '../components/RunTestsButton';
 import FilterSection from '../components/FilterSection';
 import StatsCard from '../components/StatsCard';
-
+import SidebarMenu from '../components/SidebarMenu';
+import { useMediaQuery } from 'react-responsive';
+import { useNavigate, useLocation } from 'react-router-dom';
 const ViewTestRuns = () => {
+  const isDesktopOrLaptop = useMediaQuery({ query: '(min-width: 1024px)' });
+  // Initialize isSidebarOpen state to false to ensure it's closed initially
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+
   const [allTestData, setAllTestData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selected, setSelected] = useState([]);
   const [runTestsBtnText, setRunTestsBtnText] = useState('Run Tests');
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  useEffect(() => {
+    // This effect is no longer needed if we're keeping the sidebar closed initially
+    // Remove or comment out this useEffect block
+    // setSidebarOpen(isDesktopOrLaptop);
+  }, [isDesktopOrLaptop]);
   const [filters, setFilters] = useState({
     team: [],
     testType: [],
@@ -161,12 +175,13 @@ const ViewTestRuns = () => {
   ];
 
   return (
-    <div className="bg-gray-900 min-h-screen container ">
-      <FilterSection filters={filters} handleFilterChange={handleFilterChange} />
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">
+    <div className={`flex bg-gray-800 min-h-screen ${isSidebarOpen ? 'md:pl-64' : ''}`}>
+      <SidebarMenu isOpen={isSidebarOpen} setIsOpen={setSidebarOpen} />
+      <div className="w-full container mx-auto px-4 sm:px-6 lg:px-8">
+        <FilterSection filters={filters} handleFilterChange={handleFilterChange} />
+        {/* <button className="bg-blue-500¸ hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">
           <a href="https://heimdall-set.alamoappi.octanner.io/home" target="_blank" rel="noopener noreferrer">Go to Heimdall</a>
-        </button>
+        </button> */}
         <h1 className="text-xl font-semibold leading-6 text-white mt-6 container mx-auto px-4 sm:px-6 lg:px-8">Yearbook Test Dashboard</h1>
         {isLoading ? (
           <div className="grid grid-cols-1 gap-px bg-white/5 sm:grid-cols-2 lg:grid-cols-4">
@@ -174,7 +189,7 @@ const ViewTestRuns = () => {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 gap-px bg-white/5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-px bg-white/5 sm:grid-cols-2 lg:grid-cols-4 ">
               {stats.map((stat) => <StatsCard key={stat.name} stat={stat} />)}
             </div>
             <RunTestsButton handleRunTests={handleRunTests} runTestsBtnText={runTestsBtnText} />
@@ -188,3 +203,5 @@ const ViewTestRuns = () => {
 };
 
 export default ViewTestRuns;
+
+

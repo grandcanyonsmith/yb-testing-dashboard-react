@@ -15,7 +15,7 @@ const TestRunsReport = ({ previousRunsData, setSelectedRun }) => {
   };
 
   return (
-    <div className="bg-gray-900 py-10">
+    <div className="bg-gray-800 py-10">
       <h2 className="px-4 text-base font-semibold leading-7 text-white sm:px-6 lg:px-8">Test Runs Report</h2>
       <table className="mt-6 w-full whitespace-nowrap text-left">
         <colgroup>
