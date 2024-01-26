@@ -19,12 +19,13 @@ const DashboardHeader = ({ selectedRun, onViewCodeClick }) => {
   return (
     <div className="border-b border-gray-700 pb-5 bg-gray-800 container mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between">
-        <button
+        {/* <button
           onClick={handleBackClick}
           className="self-start mb-4 sm:mb-0 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-lg"
         >
           Back
-        </button>
+        </button> */}
+        <div></div>
         <div className="sm:w-0 sm:flex-1">
           <div className="flex justify-between items-center">
             <h1

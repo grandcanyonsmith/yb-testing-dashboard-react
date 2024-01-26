@@ -77,9 +77,11 @@ const ViewCode = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isDesktopOrLaptop = useMediaQuery({ query: '(min-width: 1024px)' });
-  const [isSidebarOpen, setSidebarOpen] = useState(isDesktopOrLaptop);
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
   useEffect(() => {
-    setSidebarOpen(isDesktopOrLaptop);
+    // This effect is no longer needed if we're keeping the sidebar closed initially
+    // Remove or comment out this useEffect block
+    // setSidebarOpen(isDesktopOrLaptop);
   }, [isDesktopOrLaptop]);
 
 
@@ -175,8 +177,9 @@ const toggleSidebar = () => {
 };
 
 return (
-  <div className="ViewCode mx-auto max-w-7xl sm:px-6 lg:px-8">
-    <SidebarMenu isOpen={isSidebarOpen} setIsOpen={setSidebarOpen} />
+  <div>
+    <SidebarMenu className={`bg-gray-800 min-h-screen ${isSidebarOpen ? 'md:pl-64' : ''}`}isOpen={isSidebarOpen} setIsOpen={setSidebarOpen} />
+    <div className="ViewCode flex mx-auto max-w-7xl sm:px-6 lg:px-8">
     <TabContainer 
   activeTab={state.viewCode ? 'Code' : 'Logs'} 
   onTabChange={(index) => dispatch({ type: 'toggleViewCode', payload: index === 0 })} 
@@ -193,6 +196,7 @@ return (
   currentLoadingState={state.loadingState}
 />
     {state.error && <ErrorDisplay error={state.error} />}
+  </div>
   </div>
 );
 };
