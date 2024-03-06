@@ -74,7 +74,7 @@ const TestTable = ({ filteredTestData, handleSelectAll, handleSelect, selected }
             {/* Mobile view: Status and Last Run combined */}
 {/* Mobile view: Status and Last Run combined */}
 <td className="px-6 py-4 text-sm flex justify-between items-center sm:hidden">
-  <span className="text-gray-400">{test.timeframe_event}</span>
+  <span className="text-gray-400">{test.timeframe}</span>
   <span className={`inline-flex justify-center items-center rounded-full ${getStatusClasses(test.status).outer} w-4 h-4`}>
     <span className={`h-2 w-2 rounded-full ${getStatusClasses(test.status).inner}`}></span>
   </span>
