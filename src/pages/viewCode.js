@@ -18,9 +18,9 @@ import { useMediaQuery } from 'react-responsive';
 
 
 const API_URLS = {
-  submit: 'https://kvqpfgxn2jz5pyh4wz7thbmhay0hqcvh.lambda-url.us-west-2.on.aws/',
+  submit: 'https://e5y4is5ldimrkhhl3wbiuv67gu0uzfea.lambda-url.us-west-2.on.aws/',
   execute: 'https://ajrpop5gpwumnljpyhl765znoa0yjbrn.lambda-url.us-west-2.on.aws/',
-  fetchFileContents: 'https://zyw4xz6b5m2c7mdbhhsoerydve0mgnfl.lambda-url.us-west-2.on.aws/',
+  fetchFileContents: 'https://dhcev3ep44ypxhhmgldoxly6dq0otbrp.lambda-url.us-west-2.on.aws/',
 };
 
 const LOADING_STATES = {

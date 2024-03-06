@@ -75,7 +75,7 @@ const DashboardHeader = ({ selectedRun, onViewCodeClick }) => {
           </div>
           <div className="flex items-center mt-1">
             <p className="truncate text-sm text-gray-400 mr-2">
-              ID: {selectedRun.id}
+              ID: {selectedRun.uId}
             </p>
             <span className="inline-flex items-center rounded-full bg-blue-900 px-2 py-1 text-xs font-medium text-blue-200 ring-1 ring-inset ring-blue-600/20 mb-2 sm:mb-0 sm:mr-2">
               {selectedRun.team}

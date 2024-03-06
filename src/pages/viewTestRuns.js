@@ -101,8 +101,8 @@ const ViewTestRuns = () => {
         return statusPriority[a.status] - statusPriority[b.status];
       }
       // Convert timestamps to Date objects for comparison
-      const dateA = new Date(a.timestamp);
-      const dateB = new Date(b.timestamp);
+      const dateA = new Date(a.timeframe);
+      const dateB = new Date(b.timeframe);
       return dateB - dateA; // Most recent first
     });
   };

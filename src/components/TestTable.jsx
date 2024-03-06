@@ -90,7 +90,7 @@ const TestTable = ({ filteredTestData, handleSelectAll, handleSelect, selected }
 </td>
             {/* Desktop view: Last Run */}
             <td className="px-6 py-4 text-sm text-gray-400 hidden sm:table-cell">
-              {test.timeframe_event}
+              {test.timeframe}
             </td>
           </tr>
         ))}
