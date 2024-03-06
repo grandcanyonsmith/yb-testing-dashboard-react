@@ -13,7 +13,7 @@ import SidebarMenu from '../components/SidebarMenu';
 import { useMediaQuery } from 'react-responsive';
 
 const fetchRunData = async (testName) => {
-  const url = "https://m3safcz3boalyw7x7dl4qig3wq0tucft.lambda-url.us-west-2.on.aws/";
+  const url = "https://trxzckk4vqjepedlnaag6igxxu0utfuv.lambda-url.us-west-2.on.aws/";
   const data = { "testName": testName };
   const headers = { 'Content-type': 'application/json' };
 

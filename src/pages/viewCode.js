@@ -2,12 +2,11 @@ import React, { useEffect, useReducer, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Prism from 'prismjs';
-import 'prismjs/themes/prism-okaidia.css';
+import 'prismjs/themes/prism.css'; // Changed to light theme
 import 'prismjs/components/prism-python';
 import 'prismjs/components/prism-bash';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.js';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
-import '../styles/ViewCode.css'
 import BackButton from '../components/BackButton';
 import TabContainer from '../components/TabContainer';
 import CodeContainer from '../components/CodeContainer';
@@ -20,7 +19,7 @@ import { useMediaQuery } from 'react-responsive';
 
 const API_URLS = {
   submit: 'https://kvqpfgxn2jz5pyh4wz7thbmhay0hqcvh.lambda-url.us-west-2.on.aws/',
-  execute: 'https://xmichysgq4emm6orafcdnwwhwu0lvmez.lambda-url.us-west-2.on.aws/',
+  execute: 'https://ajrpop5gpwumnljpyhl765znoa0yjbrn.lambda-url.us-west-2.on.aws/',
   fetchFileContents: 'https://zyw4xz6b5m2c7mdbhhsoerydve0mgnfl.lambda-url.us-west-2.on.aws/',
 };
 
@@ -179,25 +178,37 @@ const toggleSidebar = () => {
 return (
   <div>
     <SidebarMenu className={`bg-gray-800 min-h-screen ${isSidebarOpen ? 'md:pl-64' : ''}`}isOpen={isSidebarOpen} setIsOpen={setSidebarOpen} />
-    <div className="ViewCode flex mx-auto max-w-7xl sm:px-6 lg:px-8">
-    <TabContainer 
-  activeTab={state.viewCode ? 'Code' : 'Logs'} 
-  onTabChange={(index) => dispatch({ type: 'toggleViewCode', payload: index === 0 })} 
-  tabs={['Code', 'Logs']} 
-/>
+    <div className="ViewCode flex mx-auto max-w-7xl sm:px-6 lg:px-8">=
     <CodeContainer code={state.code} language="python" hidden={!state.viewCode} />
     <LogContainer stdout={state.output.stdout} stderr={state.output.stderr} hidden={state.viewCode} />
     <InputContainer
-  state={state}
-  requestText={state.userRequest}
-  handleRequestChange={handleRequestChange}
-  handleSubmit={handleSubmit}
-  handleExecute={handleExecute}
-  currentLoadingState={state.loadingState}
-/>
+      state={state}
+      requestText={state.userRequest}
+      handleRequestChange={handleRequestChange}
+      handleSubmit={handleSubmit}
+      handleExecute={handleExecute}
+      currentLoadingState={state.loadingState}
+    />
     {state.error && <ErrorDisplay error={state.error} />}
   </div>
   </div>
 );
 };
 export default ViewCode;
+
+
+
+
+// // Object
+
+
+// body: "{\"newCode\": \"Hello! I don't have feelings, but I'm here and ready to assist you. How can I help you today?\"}"
+
+// statusCode: 200
+
+// Object Prototype
+// "data"
+
+
+//after I click submit then just put the response in the code container box. right now its not populating after. the response is returned
+

@@ -55,7 +55,7 @@ const TestTable = ({ filteredTestData, handleSelectAll, handleSelect, selected }
                 type="checkbox"
                 className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                 onChange={() => handleSelect(test.runId, test.filePath)}
-                checked={selected.some(item => item.id === test.runId)}
+                checked={selected.some(item => item.uId === test.runId)}
               />
             </td>
             <td className="px-6 py-4 text-sm text-gray-300">
@@ -74,7 +74,7 @@ const TestTable = ({ filteredTestData, handleSelectAll, handleSelect, selected }
             {/* Mobile view: Status and Last Run combined */}
 {/* Mobile view: Status and Last Run combined */}
 <td className="px-6 py-4 text-sm flex justify-between items-center sm:hidden">
-  <span className="text-gray-400">{test.timeframe}</span>
+  <span className="text-gray-400">{test.timeframe_event}</span>
   <span className={`inline-flex justify-center items-center rounded-full ${getStatusClasses(test.status).outer} w-4 h-4`}>
     <span className={`h-2 w-2 rounded-full ${getStatusClasses(test.status).inner}`}></span>
   </span>
@@ -90,7 +90,7 @@ const TestTable = ({ filteredTestData, handleSelectAll, handleSelect, selected }
 </td>
             {/* Desktop view: Last Run */}
             <td className="px-6 py-4 text-sm text-gray-400 hidden sm:table-cell">
-              {test.timeframe}
+              {test.timeframe_event}
             </td>
           </tr>
         ))}

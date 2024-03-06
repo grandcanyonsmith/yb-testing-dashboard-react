@@ -109,7 +109,7 @@ const ViewTestRuns = () => {
 
   const runTests = async () => {
     const testPromises = selected.map(({ id, filePath }) => 
-      axios.post('https://xmichysgq4emm6orafcdnwwhwu0lvmez.lambda-url.us-west-2.on.aws/', { filePath })
+      axios.post('https://ajrpop5gpwumnljpyhl765znoa0yjbrn.lambda-url.us-west-2.on.aws/', { filePath })
     );
   
     try {

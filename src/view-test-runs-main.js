@@ -4,7 +4,7 @@ import axios from 'axios';
 // Function to fetch test data
 export const fetchData = async (timeframe) => {
   try {
-    const response = await axios.post('https://4ktivmmitgsrs67idemrarllyy0ltvat.lambda-url.us-west-2.on.aws/', { timestamp: timeframe });
+    const response = await axios.post('https://quvp5qox6dcaydpvfmemcpeswa0yrpej.lambda-url.us-west-2.on.aws/', { timestamp: timeframe });
     if (response.data && typeof response.data === 'object') {
       // Combine all tests from each status into a single array
       const allTestData = [].concat(
@@ -52,7 +52,7 @@ export const runSelectedTests = async (selectedTests) => {
   try {
     const responses = await Promise.all(
       selectedTests.map((test) =>
-        axios.post('https://xmichysgq4emm6orafcdnwwhwu0lvmez.lambda-url.us-west-2.on.aws/', { filePath: test.filePath })
+        axios.post('https://ajrpop5gpwumnljpyhl765znoa0yjbrn.lambda-url.us-west-2.on.aws/', { filePath: test.filePath })
       )
     );
     return responses;

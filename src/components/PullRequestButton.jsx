@@ -56,7 +56,7 @@ const PullRequestButton = ({ code, testName }) => {
     console.log(data, "data");
     try {
       const response = await axios.post(
-        "https://j2qqehazvsvt44nt44sdrlx4le0womfr.lambda-url.us-west-2.on.aws/",
+        "https://kqtux76iy4lhignfy3cfj5siai0fppcw.lambda-url.us-west-2.on.aws/",
         data,
       );
       console.log(response);
